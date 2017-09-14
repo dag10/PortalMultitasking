@@ -26,11 +26,13 @@
 
 		struct Input {
 			float2 uv_MainTex;
+			float3 worldPos;
 		};
 
 		half _Glossiness;
 		half _Metallic;
 		fixed4 _Color;
+		fixed4x4 _InvPortal;
 
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -39,7 +41,14 @@
 			// put more per-instance properties here
 		UNITY_INSTANCING_CBUFFER_END
 
+
 		void surf (Input IN, inout SurfaceOutputStandard o) {
+			// If rendering through a portal, discard fragments between the back of the portal and the camera.
+			if (_InvPortal[3][3] != 0) {
+				fixed4 portalPos = mul(_InvPortal, fixed4(IN.worldPos, 1));
+				clip(-portalPos.z);
+			}
+
 			// Albedo comes from a texture tinted by color
 			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = c.rgb;

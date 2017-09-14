@@ -81,11 +81,18 @@ public class PortalCamera : MonoBehaviour {
 
         // Clear the depth buffer only under the portal so as to preserve the final depth buffer.
         ClearDepthUnderStencil(commandBuffer);
+
+        // Create a matrix for fragments to transform themselves to portal-space and determine
+        // which side of the portal plane they lie on.
+        Shader.SetGlobalMatrix("_InvPortal", outPortal.transform.localToWorldMatrix.inverse);
     }
 
     public void OnPostRender() {
         // Re-enable the stencil override, so that by default the scene will be rendered by the main camera.
         m_StencilOverride.SetActive(true);
+
+        // Clear the portal inverse transformation shader variable for future renderings.
+        Shader.SetGlobalMatrix("_InvPortal", Matrix4x4.zero);
     }
 
     // Writes 0x00 to the entire stencil buffer.
