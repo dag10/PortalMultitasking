@@ -13,6 +13,7 @@
 			ZTest Off
 			ZWrite Off
 			ColorMask 0
+			Cull Off
 
 			CGPROGRAM
 			#pragma vertex vert
@@ -58,6 +59,7 @@
 			ZTest Off
 			ZWrite On
 			ColorMask 0
+			Cull Off
 
 			CGPROGRAM
 			#pragma vertex vert
@@ -79,8 +81,8 @@
 			{
 				v2f o;
 				o.vertex = v.vertex;
-				o.vertex.xy *= 2; // Quad mesh vertices only extend to +- 0.5, so we double it to fill the clip space.
-				o.vertex.z = 1;   // Render quad at back of clip space to clear the depth buffer.
+				o.vertex.x *= 2; // Quad mesh vertices only extend to +- 0.5, so we double it to fill the clip space.
+				o.vertex.y = (o.vertex.y * 4) - 1.0; // On windows, the Y coordinates seem vertically shifted.
 				return o;
 			}
 			
@@ -102,6 +104,7 @@
 			ZTest Off
 			ZWrite On
 			ColorMask 0
+			Cull Off
 
 			CGPROGRAM
 			#pragma vertex vert
@@ -124,7 +127,6 @@
 				v2f o;
 				o.vertex = v.vertex;
 				o.vertex.xy *= 2; // Quad mesh vertices only extend to +- 0.5, so we double it to fill the clip space.
-				o.vertex.z = 1;   // Render quad at back of clip space to clear the depth buffer.
 				return o;
 			}
 			
@@ -145,6 +147,7 @@
 
 			ColorMask 0
 			ZWrite Off
+			Cull Off
 
 			CGPROGRAM
 			#pragma vertex vert
