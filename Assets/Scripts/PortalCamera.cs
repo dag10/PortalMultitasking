@@ -5,23 +5,22 @@ using UnityEngine.Rendering;
 
 public class PortalCamera : MonoBehaviour {
     private enum StencilShaderPasses {
-        PASS_STENCIL_0_SCREEN    = 0,
-        PASS_STENCIL_1_SCREEN    = 1,
+        PASS_STENCIL_0_SCREEN = 0,
+        PASS_STENCIL_1_SCREEN = 1,
         PASS_STENCIL_DEPTH_RESET = 2,
-        PASS_STENCIL_1_PORTAL    = 3,
+        PASS_STENCIL_1_PORTAL = 3,
     }
 
-    [SerializeField] private Camera m_MainCamera;
-    [SerializeField] private Portal inPortal;
-    [SerializeField] private Portal outPortal;
+    [SerializeField] private Portal m_Portal;
     [SerializeField] private Material m_StencilMaterial;
-    [SerializeField] private GameObject m_StencilOverride;
 
+    private Camera m_MainCamera;
     private Camera m_PortalCamera;
     private CommandBuffer commandBuffer;
     private Mesh m_ScreenQuad;
 
     void Start() {
+        m_MainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         m_PortalCamera = GetComponent<Camera>();
 
         // Enable this camera, because we disable it in the editor for convenience.
@@ -31,9 +30,9 @@ public class PortalCamera : MonoBehaviour {
         m_ScreenQuad = new Mesh();
         m_ScreenQuad.vertices = new Vector3[] {
             new Vector3(-0.5f, -0.5f, 0),
-            new Vector3( 0.5f, -0.5f, 0),
-            new Vector3(-0.5f,  0.5f, 0),
-            new Vector3( 0.5f,  0.5f, 0),
+            new Vector3(0.5f, -0.5f, 0),
+            new Vector3(-0.5f, 0.5f, 0),
+            new Vector3(0.5f, 0.5f, 0),
         };
         m_ScreenQuad.triangles = new int[] {
             0, 2, 1,
@@ -52,13 +51,13 @@ public class PortalCamera : MonoBehaviour {
         // The quad writes 0x01 to the whole screen's stencil buffer, permitting the rest of the scene to be rendered
         // throughout the whole screen. We disable it for this camera's render because we only want to render
         // fragments that are visible through the portal.
-        m_StencilOverride.SetActive(false);
+        m_Portal.StencilOverride.SetActive(false);
     }
 
     public void OnPreRender() {
         Matrix4x4 xfMainCamera = m_MainCamera.transform.localToWorldMatrix;
-        Matrix4x4 xfInPortal = inPortal.transform.localToWorldMatrix;
-        Matrix4x4 xfOutPortal = outPortal.transform.localToWorldMatrix;
+        Matrix4x4 xfInPortal = m_Portal.transform.localToWorldMatrix;
+        Matrix4x4 xfOutPortal = m_Portal.LinkedPortal.transform.localToWorldMatrix;
 
         // Flip the "out" portal around by 180 since we're looking out the back of the portal, not the front.
         Matrix4x4 xfFlippedOutPortal = xfOutPortal * Matrix4x4.Rotate(Quaternion.Euler(0, 180, 0));
@@ -77,19 +76,19 @@ public class PortalCamera : MonoBehaviour {
         MakeStencilBufferZero(commandBuffer);
 
         // Write to the stencil buffer where the portal is so that we'll only render there.
-        StencilPortal(commandBuffer, inPortal);
+        StencilPortal(commandBuffer, m_Portal);
 
         // Clear the depth buffer only under the portal so as to preserve the final depth buffer.
         ClearDepthUnderStencil(commandBuffer);
 
         // Create a matrix for fragments to transform themselves to portal-space and determine
         // which side of the portal plane they lie on.
-        Shader.SetGlobalMatrix("_InvPortal", outPortal.transform.localToWorldMatrix.inverse);
+        Shader.SetGlobalMatrix("_InvPortal", m_Portal.LinkedPortal.transform.localToWorldMatrix.inverse);
     }
 
     public void OnPostRender() {
         // Re-enable the stencil override, so that by default the scene will be rendered by the main camera.
-        m_StencilOverride.SetActive(true);
+        m_Portal.StencilOverride.SetActive(true);
 
         // Clear the portal inverse transformation shader variable for future renderings.
         Shader.SetGlobalMatrix("_InvPortal", Matrix4x4.zero);
