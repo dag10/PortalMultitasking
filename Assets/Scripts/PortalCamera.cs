@@ -41,6 +41,7 @@ public class PortalCamera : MonoBehaviour {
             0, 2, 1,
             2, 3, 1,
         };
+        m_ScreenQuad.UploadMeshData(true);
 
         // Create a command buffer that'll let us insert draw commands before
         // the scene starts drawing.
@@ -95,6 +96,8 @@ public class PortalCamera : MonoBehaviour {
 
         // Clear the portal inverse transformation shader variable for future renderings.
         Shader.SetGlobalMatrix("_InvPortal", Matrix4x4.zero);
+
+        commandBuffer.Clear();
     }
 
     // Writes 0x00 to the entire stencil buffer.
