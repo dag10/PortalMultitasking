@@ -306,7 +306,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Portal: {fileID: 114614540324454208}
-  m_StencilMaterial: {fileID: 2100000, guid: 0d7be2a9cafe24d988680b8ffd39a4a8, type: 2}
+  m_ClearScreenStencilMaterial: {fileID: 2100000, guid: ae6cfb87c244d402dbc33bec97f0d0b0,
+    type: 2}
+  m_SetScreenStencilMaterial: {fileID: 2100000, guid: 801b7c44cec0243d6b27f36820ff1821,
+    type: 2}
+  m_PortalStencilMaterial: {fileID: 2100000, guid: 0d7be2a9cafe24d988680b8ffd39a4a8,
+    type: 2}
+  m_ClearDepthWhereStencilMaterial: {fileID: 2100000, guid: 1220bf0ecb7264166998978db2fac43e,
+    type: 2}
 --- !u!114 &114614540324454208
 MonoBehaviour:
   m_ObjectHideFlags: 1

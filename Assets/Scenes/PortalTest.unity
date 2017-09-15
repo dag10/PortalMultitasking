@@ -622,6 +622,26 @@ Prefab:
       propertyPath: m_StencilOverride
       value: 
       objectReference: {fileID: 1671728140}
+    - target: {fileID: 114380130177761504, guid: 3c56f3e60df694aca920e357f11eda12,
+        type: 2}
+      propertyPath: m_ClearScreenStencilMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: ae6cfb87c244d402dbc33bec97f0d0b0, type: 2}
+    - target: {fileID: 114380130177761504, guid: 3c56f3e60df694aca920e357f11eda12,
+        type: 2}
+      propertyPath: m_SetScreenStencilMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 801b7c44cec0243d6b27f36820ff1821, type: 2}
+    - target: {fileID: 114380130177761504, guid: 3c56f3e60df694aca920e357f11eda12,
+        type: 2}
+      propertyPath: m_ClearDepthWhereStencilMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 1220bf0ecb7264166998978db2fac43e, type: 2}
+    - target: {fileID: 114380130177761504, guid: 3c56f3e60df694aca920e357f11eda12,
+        type: 2}
+      propertyPath: m_PortalStencilMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 0d7be2a9cafe24d988680b8ffd39a4a8, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3c56f3e60df694aca920e357f11eda12, type: 2}
   m_IsPrefabParent: 0
