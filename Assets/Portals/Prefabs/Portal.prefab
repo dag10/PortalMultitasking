@@ -103,7 +103,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1171471944890494}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.001}
+  m_LocalPosition: {x: 0, y: 0, z: -0.0005}
   m_LocalScale: {x: 0.95, y: 0.95, z: 1}
   m_Children: []
   m_Father: {fileID: 4931450500437986}
@@ -311,6 +311,8 @@ MonoBehaviour:
   m_SetScreenStencilMaterial: {fileID: 2100000, guid: 801b7c44cec0243d6b27f36820ff1821,
     type: 2}
   m_PortalStencilMaterial: {fileID: 2100000, guid: 0d7be2a9cafe24d988680b8ffd39a4a8,
+    type: 2}
+  m_ClipStencilMaterial: {fileID: 2100000, guid: 49c128833e7a8441b984fb21bbbba08a,
     type: 2}
   m_ClearDepthWhereStencilMaterial: {fileID: 2100000, guid: 1220bf0ecb7264166998978db2fac43e,
     type: 2}
