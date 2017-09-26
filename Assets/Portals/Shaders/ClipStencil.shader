@@ -44,7 +44,11 @@
 				v2f o;
 				o.vertex = v.vertex;
 				o.vertex.xy *= 2; // Quad mesh vertices only extend to +- 0.5, so we double it to fill the clip space.
-				o.vertex.z = 1;
+#if defined(SHADER_API_D3D9) | defined(SHADER_API_D3D11)
+				o.vertex.z = 0;   // Render quad at back of clip space.
+#else
+				o.vertex.z = 1;   // Render quad at back of clip space.
+#endif
 				o.clipSpacePos = o.vertex.xy;
 				return o;
 			}
@@ -52,6 +56,9 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				float2 pos = i.clipSpacePos;
+#if defined(SHADER_API_D3D9) | defined(SHADER_API_D3D11)
+				pos.y *= -1;
+#endif
 				float2 linePoint = _IntersectionPoint.xy;
 				float2 lineTangent = _IntersectionTangent.xy;
 
