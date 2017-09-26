@@ -27,6 +27,7 @@
 			uniform int _TopLeftCornerClipped;
 			uniform fixed4 _IntersectionPoint;
 			uniform fixed4 _IntersectionTangent;
+			uniform float _StereoOffset;
 
 			struct appdata
 			{
@@ -61,6 +62,8 @@
 #endif
 				float2 linePoint = _IntersectionPoint.xy;
 				float2 lineTangent = _IntersectionTangent.xy;
+
+				pos.x += (unity_StereoEyeIndex == 0 ? -_StereoOffset : _StereoOffset);
 
 				// Make the fragment's position be relative to the
 				// known position on the intersection line.
