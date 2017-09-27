@@ -13,7 +13,6 @@
 
 			ZTest Off
 			ZWrite On
-			//ColorMask 0
 			Cull Off
 
 			CGPROGRAM
@@ -47,7 +46,7 @@
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-				return fixed4(0, 1, 0, 1);
+				return fixed4(0.3, 0.3, 0.3, 1);
 			}
 			ENDCG
 		}
