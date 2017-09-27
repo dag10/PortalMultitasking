@@ -4,10 +4,13 @@
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
+		_OffsetFactor ("Offset Factor", int) = 0
+		_OffsetUnits ("Offset Units", int) = 0
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
 		LOD 200
+		Offset [_OffsetFactor], [_OffsetUnits]
 
 		// Only render this material where the stencil buffer has 0x01.
 		Stencil {

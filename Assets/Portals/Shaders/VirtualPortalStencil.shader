@@ -2,18 +2,18 @@
 {
 	SubShader
 	{
-		// Writes 0x01 in the stencil buffer for the portal opening.
+		// Writes 0x00 in the stencil buffer for the portal opening inside of the virtual scene, since we
+		// don't want to render the backside of a portal when looking through it.
 		Pass
 		{
 			Stencil {
-				Ref 1
+				Ref 0
 				Pass Replace
 			}
 
 			ZWrite Off
+			ZTest Off
 			ColorMask 0
-			Cull Off
-			Offset -3, -1
 
 			CGPROGRAM
 			#pragma vertex vert
@@ -40,7 +40,7 @@
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-				return fixed4(1, 1, 1, 1);
+				return fixed4(1, 0.8, 0.8, 1);
 			}
 			ENDCG
 		}
