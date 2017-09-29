@@ -6,6 +6,7 @@ public class Portal : MonoBehaviour {
     [SerializeField] private Portal m_LinkedPortal;
     [SerializeField] private Color m_Color;
     [SerializeField] private MeshRenderer m_BackQuad;
+    [SerializeField] private MeshRenderer m_BackBacksideQuad;
     [SerializeField] private MeshFilter m_StencilMesh;
     [SerializeField] private GameObject m_StencilOverride;
 
@@ -23,5 +24,6 @@ public class Portal : MonoBehaviour {
 
     void Start() {
         m_BackQuad.material.color = m_Color;
+        m_BackBacksideQuad.material.color = m_Color;
     }
 }

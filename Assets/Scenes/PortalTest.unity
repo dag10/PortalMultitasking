@@ -376,7 +376,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 310242705}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.39, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1349038099}
@@ -543,6 +543,10 @@ Prefab:
       propertyPath: m_Color.g
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1081623678433230, guid: 3c56f3e60df694aca920e357f11eda12, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3c56f3e60df694aca920e357f11eda12, type: 2}
   m_IsPrefabParent: 0
@@ -598,7 +602,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4907824876530382, guid: 3c56f3e60df694aca920e357f11eda12, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 1.5
+      value: 1.358
       objectReference: {fileID: 0}
     - target: {fileID: 4907824876530382, guid: 3c56f3e60df694aca920e357f11eda12, type: 2}
       propertyPath: m_LocalRotation.x
@@ -777,7 +781,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294967039
   m_RenderingPath: 1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

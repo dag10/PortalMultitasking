@@ -7,16 +7,17 @@
 		// portal plane.
 		Pass
 		{
-			Stencil {
-				Ref 1
-				Comp Always
-				Pass Replace
+			stencil {
+				ref 1
+				comp always
+				pass replace
 			}
 
 			ZTest Off
 			ZWrite Off
-			ColorMask 0
+			//ColorMask 0
 			Cull Off
+			Blend SrcAlpha OneMinusSrcAlpha
 
 			CGPROGRAM
 			#pragma vertex vert
@@ -27,6 +28,7 @@
 			uniform fixed4 _IntersectionPoint;
 			uniform fixed4 _IntersectionTangent;
 			uniform float _StereoOffset;
+			uniform fixed4 _EyePortalSide;
 
 			struct appdata
 			{
@@ -55,12 +57,17 @@
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
+				//clip(-1);
 				float2 pos = i.clipSpacePos;
 				pos.y *= _ProjectionParams.x; // If on DirectX, flip Y coordinates.
 				float2 linePoint = _IntersectionPoint.xy;
 				float2 lineTangent = _IntersectionTangent.xy;
 
-				pos.x += (unity_StereoEyeIndex == 0 ? -_StereoOffset : _StereoOffset);
+				float stereoOffset = _StereoOffset;
+				if (unity_StereoEyeIndex == 0) stereoOffset *= -1;
+				//if ((unity_StereoEyeIndex == 0 && _EyePortalSide.x > 0) ||
+				//	(unity_StereoEyeIndex == 1 && _EyePortalSide.y > 0)) stereoOffset = 0;
+				pos.x += stereoOffset;
 
 				// Make the fragment's position be relative to the
 				// known position on the intersection line.
@@ -71,7 +78,7 @@
 
 				clip(C.z);
 
-				return fixed4(1.0, C.z > 0 ? 1 : 0, 0.3, 1);
+				return fixed4(1.0, C.z > 0 ? 1 : 0, 0.3, 0.5);
 			}
 			ENDCG
 		}
