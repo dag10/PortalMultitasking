@@ -16,6 +16,8 @@ namespace Valve.VR.InteractionSystem
 	{
 		//Public properties
 		public Bounds meshBounds { get; private set; }
+        public Vector2 m_TilingScale = new Vector2(1, 1);
+        public Vector2 m_TilingOffset = new Vector2(0, 0);
 
 		//Private data
 		private MeshRenderer areaMesh;
@@ -75,6 +77,8 @@ namespace Valve.VR.InteractionSystem
 					areaMesh.material = Teleport.instance.areaVisibleMaterial;
 				}
 			}
+
+            UpdateMaterialTiling();
 		}
 
 
@@ -98,6 +102,8 @@ namespace Valve.VR.InteractionSystem
 			{
 				areaMesh.material = Teleport.instance.areaVisibleMaterial;
 			}
+
+            UpdateMaterialTiling();
 		}
 
 
@@ -114,6 +120,8 @@ namespace Valve.VR.InteractionSystem
 			{
 				areaMesh.sharedMaterial = Teleport.instance.areaVisibleMaterial;
 			}
+
+            UpdateMaterialTiling();
 		}
 
 
@@ -156,7 +164,14 @@ namespace Valve.VR.InteractionSystem
 				}
 			}
 		}
-	}
+
+		//-------------------------------------------------
+        private void UpdateMaterialTiling()
+        {
+            areaMesh.sharedMaterial.mainTextureScale = m_TilingScale;
+            areaMesh.sharedMaterial.mainTextureOffset = m_TilingOffset;
+        }
+    }
 
 
 #if UNITY_EDITOR
