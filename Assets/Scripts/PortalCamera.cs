@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
+[RequireComponent(typeof(Camera))]
 public class PortalCamera : MonoBehaviour {
     [SerializeField] private bool m_DrawDebugLines;
     [SerializeField] private Portal m_Portal;
@@ -13,13 +14,12 @@ public class PortalCamera : MonoBehaviour {
     [SerializeField] private Material m_ClipStencilMaterial;
     [SerializeField] private Material m_ClearDepthWhereStencilMaterial;
 
-    private Camera m_MainCamera;
+    public Camera m_MainCamera;
     private Camera m_PortalCamera;
     private CommandBuffer commandBuffer;
     private Mesh m_ScreenQuad;
 
     void Start() {
-        m_MainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         m_PortalCamera = GetComponent<Camera>();
 
         // Enable this camera, because we disable it in the editor for convenience.
@@ -60,6 +60,20 @@ public class PortalCamera : MonoBehaviour {
     }
 
     public void OnPreRender() {
+        foreach (var cam in GameObject.FindGameObjectsWithTag("MainCamera")) {
+            if (cam.activeInHierarchy) {
+                m_MainCamera = cam.GetComponent<Camera>();
+                if (m_MainCamera != null) break;
+            }
+        }
+
+        m_PortalCamera.fieldOfView = m_MainCamera.fieldOfView;
+        m_PortalCamera.nearClipPlane = m_MainCamera.nearClipPlane;
+        m_PortalCamera.farClipPlane = m_MainCamera.farClipPlane;
+        m_PortalCamera.stereoTargetEye = m_MainCamera.stereoTargetEye;
+        m_PortalCamera.stereoSeparation = m_MainCamera.stereoSeparation;
+        m_PortalCamera.stereoConvergence = m_MainCamera.stereoConvergence;
+
         Matrix4x4 xfMainCamera = m_MainCamera.transform.localToWorldMatrix;
         Matrix4x4 xfInPortal = m_Portal.transform.localToWorldMatrix;
         Matrix4x4 xfOutPortal = m_Portal.LinkedPortal.transform.localToWorldMatrix;
