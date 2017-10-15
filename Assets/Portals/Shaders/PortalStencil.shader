@@ -13,7 +13,8 @@
 			ZWrite Off
 			ColorMask 0
 			Cull Off
-			Offset -3, -1
+
+			Offset -3, 0
 
 			CGPROGRAM
 			#pragma vertex vert
@@ -35,12 +36,14 @@
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
+				o.vertex.z *= 0.5;
 				return o;
 			}
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-				return fixed4(1, 1, 1, 1);
+				return float4(i.vertex.z, i.vertex.z, i.vertex.z, 1);
+				//return fixed4(1, 1, 1, 1);
 			}
 			ENDCG
 		}

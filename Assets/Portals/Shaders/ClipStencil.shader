@@ -1,5 +1,10 @@
 ﻿Shader "Portals/ClipStencil"
 {
+	Properties {
+		_OffsetFactor ("Offset Factor", int) = 0
+		_OffsetUnits ("Offset Units", int) = 0
+	}
+
 	SubShader
 	{
 		// Writes 0x01 in the entire stencil buffer on the correct side of a line
@@ -7,6 +12,8 @@
 		// portal plane.
 		Pass
 		{
+			Offset 0, 0
+
 			Stencil {
 				Ref 1
 				Comp Always
@@ -24,9 +31,9 @@
 			
 			#include "UnityCG.cginc"
 
-			uniform fixed4 _IntersectionPoint;
-			uniform fixed4 _IntersectionTangent;
-			uniform float _StereoOffset;
+			uniform fixed4 _IntersectionPoint[2];
+			uniform fixed4 _IntersectionTangent[2];
+			//uniform float _StereoOffset;
 
 			struct appdata
 			{
@@ -55,12 +62,17 @@
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
+				// If this eye isn't clipping a portal, don't do anything.
+				if (_IntersectionPoint[unity_StereoEyeIndex].w == 0) {
+					clip(-1);
+				}
+
 				float2 pos = i.clipSpacePos;
 				pos.y *= _ProjectionParams.x; // If on DirectX, flip Y coordinates.
-				float2 linePoint = _IntersectionPoint.xy;
-				float2 lineTangent = _IntersectionTangent.xy;
+				float2 linePoint = _IntersectionPoint[unity_StereoEyeIndex].xy;
+				float2 lineTangent = _IntersectionTangent[unity_StereoEyeIndex].xy;
 
-				pos.x += (unity_StereoEyeIndex == 0 ? -_StereoOffset : _StereoOffset);
+				//pos.x += (unity_StereoEyeIndex == 0 ? -_StereoOffset : _StereoOffset);
 
 				// Make the fragment's position be relative to the
 				// known position on the intersection line.
