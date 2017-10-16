@@ -12,8 +12,6 @@
 		// portal plane.
 		Pass
 		{
-			Offset 0, 0
-
 			Stencil {
 				Ref 1
 				Comp Always
@@ -25,6 +23,8 @@
 			ColorMask 0
 			Cull Off
 
+			Offset [_OffsetFactor], [_OffsetUnits]
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -33,7 +33,6 @@
 
 			uniform fixed4 _IntersectionPoint[2];
 			uniform fixed4 _IntersectionTangent[2];
-			//uniform float _StereoOffset;
 
 			struct appdata
 			{
@@ -71,8 +70,6 @@
 				pos.y *= _ProjectionParams.x; // If on DirectX, flip Y coordinates.
 				float2 linePoint = _IntersectionPoint[unity_StereoEyeIndex].xy;
 				float2 lineTangent = _IntersectionTangent[unity_StereoEyeIndex].xy;
-
-				//pos.x += (unity_StereoEyeIndex == 0 ? -_StereoOffset : _StereoOffset);
 
 				// Make the fragment's position be relative to the
 				// known position on the intersection line.

@@ -1,5 +1,10 @@
 ﻿Shader "Portals/PortalStencil"
 {
+	Properties
+	{
+		_OffsetFactor ("Offset Factor", int) = 0
+		_OffsetUnits ("Offset Units", int) = 0
+	}
 	SubShader
 	{
 		// Writes 0x01 in the stencil buffer for the portal opening.
@@ -14,7 +19,7 @@
 			ColorMask 0
 			Cull Off
 
-			Offset -3, 0
+			Offset [_OffsetFactor], [_OffsetUnits]
 
 			CGPROGRAM
 			#pragma vertex vert
@@ -36,14 +41,18 @@
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
+
+				// I'm not sure why I have to do this, but the near depth or near and far clip planes seem
+				// to be incorrect when rendering this shader using CommandBuffer.DrawMesh() versus the
+				// material just being natively in the scene.
 				o.vertex.z *= 0.5;
+
 				return o;
 			}
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-				return float4(i.vertex.z, i.vertex.z, i.vertex.z, 1);
-				//return fixed4(1, 1, 1, 1);
+				return fixed4(1, 1, 1, 1);
 			}
 			ENDCG
 		}
