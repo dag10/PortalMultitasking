@@ -12,7 +12,7 @@
 			}
 
 			ZWrite Off
-			ZTest Off
+			ZTest On
 			ColorMask 0
 
 			CGPROGRAM

@@ -52,6 +52,9 @@ public class PortalCamera : MonoBehaviour {
                 if (m_MainCamera != null) break;
             }
         }
+
+        m_PortalCamera.nearClipPlane = m_MainCamera.nearClipPlane;
+        m_PortalCamera.farClipPlane = m_MainCamera.farClipPlane;
     }
 
     public void OnPreCull() {
@@ -66,6 +69,12 @@ public class PortalCamera : MonoBehaviour {
                              Matrix4x4.Translate(Vector3.forward * -99999 / 2f) *
                              m_PortalCamera.worldToCameraMatrix;
     }
+
+    public bool Do_MakeZero = true;
+    public bool Do_StencilPortal = true;
+    public bool Do_StencilClip = true;
+    public bool Do_UnstencilPortal = true;
+    public bool Do_ClearDepth = true;
 
     public void OnPreRender() {
         Matrix4x4 xfMainCamera = m_MainCamera.transform.localToWorldMatrix;
@@ -86,22 +95,22 @@ public class PortalCamera : MonoBehaviour {
             xfPortalCamera.MultiplyVector(Vector3.up));
 
         // Clear the whole stencil buffer, but retain the depth buffer.
-        MakeStencilBufferZero();
+        if (Do_MakeZero) MakeStencilBufferZero();
 
         // Write to the stencil buffer where the portal is so that we'll only render there.
-        StencilPortal();
+        if (Do_StencilPortal) StencilPortal();
 
         // Write to the stencil buffer where the camera's near clip plane clips through the
         // portal surface.
-        StencilPortalClip();
+        if (Do_StencilClip) StencilPortalClip();
 
         // Clear the stencil buffer for portal opening on the other side of the portal, in the virtual
         // scene. This prevent us from seeing the wall when we're looking backwards through a portal but
         // haven't yet teleported through the portal.
-        UnstencilVirtualPortal();
+        if (Do_UnstencilPortal) UnstencilVirtualPortal();
 
         // Clear the depth buffer only under the portal so as to preserve the final depth buffer.
-        ClearDepthUnderStencil();
+        if (Do_ClearDepth) ClearDepthUnderStencil();
 
         // Create a matrix for fragments to transform themselves to portal-space and determine
         // which side of the portal plane they lie on.
@@ -185,14 +194,16 @@ public class PortalCamera : MonoBehaviour {
             new Vector4(), new Vector4()
         };
 
+        float[] eyePortalDistances = new float[2];
+
         Vector3 leftEyePoint_CS_Euler, leftEyeTangent_CS_Euler;
-        if (GetClipLine(Camera.StereoscopicEye.Left, out leftEyePoint_CS_Euler, out leftEyeTangent_CS_Euler)) {
+        if (GetEyeClipInfo(Camera.StereoscopicEye.Left, out leftEyePoint_CS_Euler, out leftEyeTangent_CS_Euler, out eyePortalDistances[0])) {
             intersectionPoints_CS[0] = MathUtils.Vec3to4(leftEyePoint_CS_Euler, 1);
             intersectionTangents_CS[0] = MathUtils.Vec3to4(leftEyeTangent_CS_Euler, 1);
         }
 
         Vector3 rightEyePoint_CS_Euler, rightEyeTangent_CS_Euler;
-        if (GetClipLine(Camera.StereoscopicEye.Right, out rightEyePoint_CS_Euler, out rightEyeTangent_CS_Euler)) {
+        if (GetEyeClipInfo(Camera.StereoscopicEye.Right, out rightEyePoint_CS_Euler, out rightEyeTangent_CS_Euler, out eyePortalDistances[1])) {
             intersectionPoints_CS[1] = MathUtils.Vec3to4(rightEyePoint_CS_Euler, 1);
             intersectionTangents_CS[1] = MathUtils.Vec3to4(rightEyeTangent_CS_Euler, 1);
         }
@@ -201,17 +212,20 @@ public class PortalCamera : MonoBehaviour {
         // lie in the region clipping the portal plane.
         m_ClipStencilMaterial.SetVectorArray("_IntersectionPoint", intersectionPoints_CS);
         m_ClipStencilMaterial.SetVectorArray("_IntersectionTangent", intersectionTangents_CS);
+        Shader.SetGlobalFloatArray("_EyePortalDistances", eyePortalDistances);
         commandBuffer.DrawMesh(
             m_ScreenQuad, Matrix4x4.identity, m_ClipStencilMaterial,
             0, 0);
     }
 
-    bool GetClipLine(Camera.StereoscopicEye eye, out Vector3 linePoint_CS, out Vector3 lineTangent_CS) {
+    bool GetEyeClipInfo(Camera.StereoscopicEye eye, out Vector3 linePoint_CS, out Vector3 lineTangent_CS, out float eyePortalDistance) {
         linePoint_CS = new Vector3();
         lineTangent_CS = new Vector3();
+        eyePortalDistance = 0.0f;
 
         // The current eye's matrices.
         Matrix4x4 projectionMatrix = m_MainCamera.GetStereoProjectionMatrix(eye);
+        Matrix4x4 gpuProjectionMatrix = GL.GetGPUProjectionMatrix(projectionMatrix, false);
         Matrix4x4 viewMatrix = m_MainCamera.GetStereoViewMatrix(eye);
 
         // A matrix containing some directions and positions in clip space
@@ -243,17 +257,27 @@ public class PortalCamera : MonoBehaviour {
         Vector3 clipUp = MathUtils.Vec4to3(clipPlane_SS.GetColumn(1)).normalized;
         // The projection matrix doesn't correctly transform the forward matrix, so derive it from the right and up cross products.
         Vector3 clipForward = Vector3.Cross(clipRight, clipUp).normalized;
-        float clipWidth = clipPlane_VS.GetColumn(3).x * 2;
-        float clipHeight = clipPlane_VS.GetColumn(3).y * 2;
+        Vector3 clipTopRight_VS = MathUtils.HomogenousToCartesian(clipPlane_VS.GetColumn(3));
+        float clipWidth = clipTopRight_VS.x * 2;
+        float clipHeight = clipTopRight_VS.y * 2;
+
+        // Calculate portal-space position of eye origin.
+        Vector3 eyePosition_PS = MathUtils.HomogenousToCartesian(
+            portalOpening.worldToLocalMatrix * viewMatrix.inverse * new Vector4(0, 0, 0, 1));
+        eyePortalDistance = eyePosition_PS.z;
 
         // If clip plane quad is too far away from portal quad, stop early.
-        float clipPortalDistance = PortalPointDistance(clipCenter);
-        float diagClipDist = new Vector2(clipWidth / 2.0f, clipHeight / 2.0f).magnitude;
-        float maxDist = Mathf.Lerp(clipHeight / 2, diagClipDist, Mathf.Abs(Vector3.Dot(clipRight, portalForward)));
-        if (clipPortalDistance > maxDist) {
-            // TODO: Make this smaller.
-            return false;
-        }
+        //float clipPortalDistance = PortalPointDistance(clipCenter);
+        //float diagClipDist = new Vector2(clipWidth / 2.0f, clipHeight / 2.0f).magnitude;
+        //float maxDist = Mathf.Lerp(clipHeight / 2, diagClipDist, Mathf.Abs(Vector3.Dot(clipRight, portalForward)));
+        //if (clipPortalDistance > maxDist) {
+        //    // TODO: Make this smaller.
+        //    return false;
+        //}
+
+        // TODO: Instead of looking for distance from center of clip plane to portal,
+        //       calculate directly if the pyramid of eye-origin-to-near-clip-plane
+        //       intersects the portal plane at all.
 
         Matrix4x4 planeBases = new Matrix4x4(
             MathUtils.Vec3to4(clipRight, 1),
@@ -309,9 +333,9 @@ public class PortalCamera : MonoBehaviour {
 
         // Transform intersection line to clip space.
         linePoint_CS = MathUtils.HomogenousToCartesian(
-            projectionMatrix * viewMatrix * MathUtils.Vec3to4(linePoint, 1));
+            gpuProjectionMatrix * viewMatrix * MathUtils.Vec3to4(linePoint, 1));
         Vector3 linePointB_CS = MathUtils.HomogenousToCartesian(
-            projectionMatrix * viewMatrix * MathUtils.Vec3to4(linePoint + lineTangent, 1));
+            gpuProjectionMatrix * viewMatrix * MathUtils.Vec3to4(linePoint + lineTangent, 1));
         lineTangent_CS = (linePointB_CS - linePoint_CS).normalized;
 
         return true;

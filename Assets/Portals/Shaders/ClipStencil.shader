@@ -22,6 +22,7 @@
 			ZWrite Off
 			ColorMask 0
 			Cull Off
+			Blend SrcAlpha OneMinusSrcAlpha
 
 			Offset [_OffsetFactor], [_OffsetUnits]
 
@@ -33,6 +34,7 @@
 
 			uniform fixed4 _IntersectionPoint[2];
 			uniform fixed4 _IntersectionTangent[2];
+			uniform fixed _EyePortalDistances[2];
 
 			struct appdata
 			{
@@ -80,7 +82,7 @@
 
 				clip(C.z);
 
-				return fixed4(1.0, C.z > 0 ? 1 : 0, 0.3, 1);
+				return fixed4(1.0, C.z > 0 ? 1 : 0, 0.3, 0.5);
 			}
 			ENDCG
 		}

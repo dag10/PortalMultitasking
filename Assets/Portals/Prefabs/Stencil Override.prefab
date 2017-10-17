@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4630660823894830}
   - component: {fileID: 33560595779275920}
   - component: {fileID: 137034396012341920}
+  - component: {fileID: 114890760960210046}
   m_Layer: 0
   m_Name: Stencil Override
   m_TagString: Untagged
@@ -48,6 +49,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1292359210979852}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114890760960210046
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1292359210979852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2ee43a8c3d50214c9e09495f52a805e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!137 &137034396012341920
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
