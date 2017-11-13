@@ -51,7 +51,7 @@
 			// If rendering through a portal, discard fragments between the back of the portal and the camera.
 			if (_InvPortal[3][3] != 0 && _EyePortalDistances[unity_StereoEyeIndex] < 0) {
 				fixed4 portalPos = mul(_InvPortal, fixed4(IN.worldPos, 1));
-				clip(-portalPos.z + 0.001);
+				clip(-portalPos.z);
 			}
 
 			// Albedo comes from a texture tinted by color

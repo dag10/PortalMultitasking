@@ -82,8 +82,8 @@ public class PortalCamera : MonoBehaviour {
 
     public void OnPreRender() {
         Matrix4x4 xfMainCamera = m_MainCamera.transform.localToWorldMatrix;
-        Matrix4x4 xfInPortal = m_Portal.transform.localToWorldMatrix;
-        Matrix4x4 xfOutPortal = m_Portal.LinkedPortal.transform.localToWorldMatrix;
+        Matrix4x4 xfInPortal = m_Portal.StencilMesh.transform.localToWorldMatrix;
+        Matrix4x4 xfOutPortal = m_Portal.LinkedPortal.StencilMesh.transform.localToWorldMatrix;
 
         // Flip the "out" portal around by 180 since we're looking out the back of the portal, not the front.
         Matrix4x4 xfFlippedOutPortal = xfOutPortal * Matrix4x4.Rotate(Quaternion.Euler(0, 180, 0));
@@ -118,7 +118,7 @@ public class PortalCamera : MonoBehaviour {
 
         // Create a matrix for fragments to transform themselves to portal-space and determine
         // which side of the portal plane they lie on.
-        Shader.SetGlobalMatrix("_InvPortal", m_Portal.LinkedPortal.transform.localToWorldMatrix.inverse);
+        Shader.SetGlobalMatrix("_InvPortal", m_Portal.LinkedPortal.StencilMesh.transform.localToWorldMatrix.inverse);
     }
 
     public void OnPostRender() {
