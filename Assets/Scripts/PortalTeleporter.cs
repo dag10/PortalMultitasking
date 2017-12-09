@@ -24,13 +24,23 @@ public class PortalTeleporter : MonoBehaviour {
         }
 
         foreach (var portal in m_Portals) {
-            if (DidCameraMoveThroughPortal(portal)) {
+            if (!IsHoldingAPortal() && DidCameraMoveThroughPortal(portal)) {
                 TeleportThroughPortal(portal);
                 break;
             }
         }
 
         m_OldCameraPosition = m_MainCamera.transform.position;
+    }
+
+    private bool IsHoldingAPortal() {
+        foreach (var portal in m_Portals) {
+            if (portal.IsHeld) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private bool DidCameraMoveThroughPortal(Portal portal) {
