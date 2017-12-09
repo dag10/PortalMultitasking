@@ -80,6 +80,11 @@
 				// Calculate which side of the intersection line we're on.
 				float3 C = cross(float3(lineTangent, 0), float3(pos, 0));
 
+				// Stencil a little bit more than the boundary defined by the clip plane
+				// to hide the 1px line that occurs at the clip plane intersection. This is dependent
+				// on which side of the plane the eye is on.
+				C.z += (_EyePortalDistances[unity_StereoEyeIndex] > 0) ? -0.001 : 0.001;
+
 				clip(C.z);
 
 				return fixed4(1.0, C.z > 0 ? 1 : 0, 0.3, 0.5);

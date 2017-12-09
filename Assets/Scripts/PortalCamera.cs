@@ -15,6 +15,8 @@ public class PortalCamera : MonoBehaviour {
     [SerializeField] private Material m_ClearDepthWhereStencilMaterial;
 
     private Camera m_MainCamera;
+    private Vector3 m_OriginalMainCameraPosition;
+    private Quaternion m_OriginalMainCameraRotation;
     private Camera m_PortalCamera;
     private CommandBuffer commandBuffer;
     private Mesh m_ScreenQuad;
@@ -57,7 +59,7 @@ public class PortalCamera : MonoBehaviour {
         m_PortalCamera.nearClipPlane = m_MainCamera.nearClipPlane;
         m_PortalCamera.farClipPlane = m_MainCamera.farClipPlane;
         m_PortalCamera.stereoTargetEye = m_MainCamera.stereoTargetEye;
-        m_PortalCamera.fieldOfView = m_MainCamera.fieldOfView;
+        //m_PortalCamera.fieldOfView = m_MainCamera.fieldOfView;
         m_PortalCamera.enabled = true;
     }
 
@@ -69,19 +71,16 @@ public class PortalCamera : MonoBehaviour {
         m_Portal.StencilOverride.SetActive(false);
 
         // Disable buggy frustum culling until I can figure out how to fix it.
-        m_PortalCamera.cullingMatrix = Matrix4x4.Ortho(-99999, 99999, -99999, 99999, 0.001f, 99999) *
-                             Matrix4x4.Translate(Vector3.forward * -99999 / 2f) *
+        int bignum = 1000000;
+        m_MainCamera.cullingMatrix = Matrix4x4.Ortho(-bignum, bignum, -bignum, bignum, 0.001f, bignum) *
+                             Matrix4x4.Translate(Vector3.forward * -bignum / 2f) *
                              m_PortalCamera.worldToCameraMatrix;
-    }
+        m_PortalCamera.cullingMatrix = Matrix4x4.Ortho(-bignum, bignum, -bignum, bignum, 0.001f, bignum) *
+                             Matrix4x4.Translate(Vector3.forward * -bignum / 2f) *
+                             m_PortalCamera.worldToCameraMatrix;
 
-    public bool Do_MakeZero = true;
-    public bool Do_StencilPortal = true;
-    public bool Do_StencilClip = true;
-    public bool Do_UnstencilPortal = true;
-    public bool Do_ClearDepth = true;
+        xfMainCamera = m_MainCamera.transform.localToWorldMatrix;
 
-    public void OnPreRender() {
-        Matrix4x4 xfMainCamera = m_MainCamera.transform.localToWorldMatrix;
         Matrix4x4 xfInPortal = m_Portal.StencilMesh.transform.localToWorldMatrix;
         Matrix4x4 xfOutPortal = m_Portal.LinkedPortal.StencilMesh.transform.localToWorldMatrix;
 
@@ -119,6 +118,37 @@ public class PortalCamera : MonoBehaviour {
         // Create a matrix for fragments to transform themselves to portal-space and determine
         // which side of the portal plane they lie on.
         Shader.SetGlobalMatrix("_InvPortal", m_Portal.LinkedPortal.StencilMesh.transform.localToWorldMatrix.inverse);
+
+        MoveMainCamera();
+    }
+
+    private Matrix4x4 xfMainCamera;
+
+    public bool Do_MakeZero = true;
+    public bool Do_StencilPortal = true;
+    public bool Do_StencilClip = true;
+    public bool Do_UnstencilPortal = true;
+    public bool Do_ClearDepth = true;
+
+    private void MoveMainCamera() {
+        //// Store the main camera's position and temporarily move the main camera to where we are so that lights render
+        //// correctly.
+        //m_OriginalMainCameraPosition = m_MainCamera.transform.position;
+        //m_OriginalMainCameraRotation = m_MainCamera.transform.rotation;
+        //m_MainCamera.transform.position = transform.position;
+        //m_MainCamera.transform.rotation = transform.rotation;
+        //m_MainCamera.gameObject.tag = "Untagged";
+        //gameObject.tag = "MainCamera";
+    }
+
+    private void PutMainCameraBack() {
+        //m_MainCamera.transform.position = m_OriginalMainCameraPosition;
+        //m_MainCamera.transform.rotation = m_OriginalMainCameraRotation;
+        //m_MainCamera.gameObject.tag = "MainCamera";
+        //gameObject.tag = "Untagged";
+    }
+
+    public void OnPreRender() {
     }
 
     public void OnPostRender() {
@@ -127,6 +157,9 @@ public class PortalCamera : MonoBehaviour {
 
         // Clear the portal inverse transformation shader variable for future renderings.
         Shader.SetGlobalMatrix("_InvPortal", Matrix4x4.zero);
+
+        // Move the main camera back to where it belongs.
+        PutMainCameraBack();
 
         commandBuffer.Clear();
     }
@@ -154,7 +187,7 @@ public class PortalCamera : MonoBehaviour {
 
     // Writes 0x01 to the stencil buffer where the portal is.
     void StencilPortal() {
-        Matrix4x4 xfMainCamera = m_MainCamera.transform.localToWorldMatrix;
+        //Matrix4x4 xfMainCamera = m_MainCamera.transform.localToWorldMatrix;
         Matrix4x4 xfPortalCamera = m_PortalCamera.transform.localToWorldMatrix;
 
         // Here we do something non-intuitive. We want to render the portal opening from
@@ -238,6 +271,7 @@ public class PortalCamera : MonoBehaviour {
         // The current eye's matrices.
         Matrix4x4 projectionMatrix;
         Matrix4x4 viewMatrix;
+        PutMainCameraBack();
         if (eye.HasValue) {
             projectionMatrix = m_MainCamera.GetStereoProjectionMatrix(eye.Value);
             viewMatrix = m_MainCamera.GetStereoViewMatrix(eye.Value);
@@ -246,6 +280,7 @@ public class PortalCamera : MonoBehaviour {
             viewMatrix = m_MainCamera.worldToCameraMatrix;
         }
         Matrix4x4 gpuProjectionMatrix = GL.GetGPUProjectionMatrix(projectionMatrix, false);
+        MoveMainCamera();
 
         // A matrix containing some directions and positions in clip space
         // that will be useful when transformed to view space and scene space.
