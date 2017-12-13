@@ -21,6 +21,13 @@ SubShader {
   Cull Off
   Tags{ "DisableBatching" = "True" }
 
+	// Only render this material where the stencil buffer has 0x01.
+	Stencil {
+		Ref 1
+		Comp Equal
+		Pass Keep
+	}
+
   CGPROGRAM
   #pragma surface surf Lambert vertex:vert addshadow
   #pragma target 3.0
@@ -44,6 +51,7 @@ SubShader {
     float2 uv_MainTex;
     float4 color : COLOR;
     fixed vface : VFACE;
+	float3 worldPos;
   };
 
   void vert (inout appdata_t v, out Input o) {
@@ -61,6 +69,7 @@ SubShader {
   }
 
   void surf (Input IN, inout SurfaceOutput o) {
+	  PortalClip(IN.worldPos);
     fixed4 c = _Color;
     o.Normal = float3(0,0,IN.vface);
     o.Albedo = c.rgb * IN.color.rgb;

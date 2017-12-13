@@ -20,6 +20,12 @@ Properties {
 SubShader {
 
 Cull Back
+	// Only render this material where the stencil buffer has 0x01.
+	Stencil {
+		Ref 1
+		Comp Equal
+		Pass Keep
+	}
 
 CGPROGRAM
 #pragma surface surf Lambert vertex:vert addshadow
@@ -30,6 +36,7 @@ fixed4 _Color;
 
 struct Input {
   float4 color : COLOR;
+  float3 worldPos;
 };
 
 void vert(inout appdata_full v) {
@@ -37,6 +44,7 @@ void vert(inout appdata_full v) {
 }
 
 void surf (Input IN, inout SurfaceOutput o) {
+	PortalClip(IN.worldPos);
   o.Albedo = _Color * IN.color.rgb;
 }
 ENDCG

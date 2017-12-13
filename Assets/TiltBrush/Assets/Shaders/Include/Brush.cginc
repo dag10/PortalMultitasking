@@ -41,6 +41,17 @@ float4 GetAnimatedSelectionColor( float4 color) {
   return color + sin(_Time.w*2)*.1 + .2f;
 }
 
+// Portals
+fixed4x4 _InvPortal;
+fixed _EyePortalDistances[2];
+
+// If rendering through a portal, discard fragments between the back of the portal and the camera.
+void PortalClip(float3 worldPos) {
+	if (_InvPortal[3][3] != 0 && _EyePortalDistances[unity_StereoEyeIndex] < 0) {
+		fixed4 portalPos = mul(_InvPortal, fixed4(worldPos, 1));
+		clip(-portalPos.z);
+	}
+}
 
 //
 // Common for Music Reactive Brushes

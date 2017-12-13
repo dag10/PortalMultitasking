@@ -21,6 +21,13 @@ Properties {
 }
 
 SubShader {
+	// Only render this material where the stencil buffer has 0x01.
+	Stencil {
+		Ref 1
+		Comp Equal
+		Pass Keep
+	}
+		
     Pass {
         Tags {"Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout"}
         Lighting Off
@@ -46,6 +53,7 @@ SubShader {
 
         struct v2f {
             float4 vertex : POSITION;
+			float3 worldPos : POSITIONT;
             float2 texcoord : TEXCOORD0;
             float4 color : COLOR;
             UNITY_FOG_COORDS(1)
@@ -57,6 +65,7 @@ SubShader {
             v2f o;
 
             o.vertex = UnityObjectToClipPos(v.vertex);
+			o.worldPos = mul(unity_ObjectToWorld, v.vertex);
             o.texcoord = v.texcoord;
             o.color = TbVertToNative(v.color);
             UNITY_TRANSFER_FOG(o, o.vertex);
@@ -65,6 +74,7 @@ SubShader {
 
         fixed4 frag (v2f i) : COLOR
         {
+			PortalClip(i.worldPos);
             fixed4 c;
             UNITY_APPLY_FOG(i.fogCoord, i.color);
             c = tex2D(_MainTex, i.texcoord) * i.color;
