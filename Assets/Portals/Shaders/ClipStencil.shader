@@ -83,7 +83,7 @@
 				// Stencil a little bit more than the boundary defined by the clip plane
 				// to hide the 1px line that occurs at the clip plane intersection. This is dependent
 				// on which side of the plane the eye is on.
-				C.z += (_EyePortalDistances[unity_StereoEyeIndex] > 0) ? -0.001 : 0.001;
+				C.z += (_EyePortalDistances[unity_StereoEyeIndex] > 0) ? -0.01 : 0.01;
 
 				clip(C.z);
 
