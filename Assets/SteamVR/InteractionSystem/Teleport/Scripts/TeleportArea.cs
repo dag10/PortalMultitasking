@@ -18,6 +18,7 @@ namespace Valve.VR.InteractionSystem
 		public Bounds meshBounds { get; private set; }
         public Vector2 m_TilingScale = new Vector2(1, 1);
         public Vector2 m_TilingOffset = new Vector2(0, 0);
+        public VirtualApp m_App = null;
 
 		//Private data
 		private MeshRenderer areaMesh;
@@ -50,7 +51,7 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		public override bool ShouldActivate( Vector3 playerPosition )
 		{
-			return true;
+			return PortalManager.Instance == null || m_App == PortalManager.Instance.CurrentApp;
 		}
 
 
