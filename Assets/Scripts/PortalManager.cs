@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR.InteractionSystem;
 
-public class PortalTeleporter : MonoBehaviour {
+public class PortalManager : MonoBehaviour {
     [SerializeField] private Portal[] m_Portals;
     [SerializeField] private Player m_Player;
 
