@@ -45,7 +45,6 @@ public class PortalCamera : MonoBehaviour {
         m_PortalCamera.AddCommandBuffer(CameraEvent.BeforeForwardOpaque, commandBuffer);
     }
 
-    public GameObject TMP_QUAD = null;
     void LateUpdate() {
         foreach (var cam in GameObject.FindGameObjectsWithTag("MainCamera")) {
             if (cam.activeInHierarchy) {
@@ -53,18 +52,6 @@ public class PortalCamera : MonoBehaviour {
                 if (m_MainCamera != null) break;
             }
         }
-
-        //m_PortalCamera.SetStereoProjectionMatrix(Camera.StereoscopicEye.Left, m_MainCamera.GetStereoProjectionMatrix(Camera.StereoscopicEye.Left));
-        //m_PortalCamera.SetStereoProjectionMatrix(Camera.StereoscopicEye.Right, m_MainCamera.GetStereoProjectionMatrix(Camera.StereoscopicEye.Right));
-
-        //m_PortalCamera.stereoTargetEye = m_MainCamera.stereoTargetEye;
-        //if (m_PortalCamera.stereoTargetEye == StereoTargetEyeMask.None) {
-        //    m_PortalCamera.fieldOfView = m_MainCamera.fieldOfView;
-        //    m_PortalCamera.nearClipPlane = m_MainCamera.nearClipPlane;
-        //    m_PortalCamera.farClipPlane = m_MainCamera.farClipPlane;
-        //    m_PortalCamera.stereoSeparation = m_MainCamera.stereoSeparation;
-        //    m_PortalCamera.stereoConvergence = m_MainCamera.stereoConvergence;
-        //}
     }
 
     public void OnPreCull() {
@@ -170,13 +157,6 @@ public class PortalCamera : MonoBehaviour {
         //
         // Finally, the last term is the quad's model matrix, which is its modelspace-to-scenespace transform.
         Matrix4x4 modelMatrix = xfPortalCamera * xfMainCamera.inverse * m_Portal.StencilMesh.transform.localToWorldMatrix;
-        //Matrix4x4 modelMatrix = m_PortalCamera.cameraToWorldMatrix * m_MainCamera.worldToCameraMatrix * m_Portal.StencilMesh.transform.localToWorldMatrix;
-
-        // Move portal outward a small amount to fix z-fighting.
-        //modelMatrix = modelMatrix * Matrix4x4.Translate(new Vector3(0, 0, -0.001f));
-
-        MaterialPropertyBlock props = new MaterialPropertyBlock();
-        m_Portal.StencilMesh.gameObject.GetComponent<MeshRenderer>().GetPropertyBlock(props);
 
         commandBuffer.DrawMesh(
             m_Portal.StencilMesh.mesh,
@@ -184,20 +164,6 @@ public class PortalCamera : MonoBehaviour {
             m_PortalStencilMaterial,
             0,
             0);
-            //props);
-
-        if (TMP_QUAD != null) {
-            //Matrix4x4 modelMatrix2 = xfPortalCamera * xfMainCamera.inverse * TMP_QUAD.transform.localToWorldMatrix;
-            //MaterialPropertyBlock props2 = new MaterialPropertyBlock();
-            //TMP_QUAD.GetComponent<MeshRenderer>().GetPropertyBlock(props2);
-            //commandBuffer.DrawMesh(
-            //    TMP_QUAD.GetComponent<MeshFilter>().mesh,
-            //    modelMatrix2,
-            //    TMP_QUAD.GetComponent<MeshRenderer>().material,
-            //    0,
-            //    0,
-            //    props2);
-        }
     }
 
     void UnstencilVirtualPortal() {
@@ -211,11 +177,6 @@ public class PortalCamera : MonoBehaviour {
 
     // Writes 0x01 to the stencil buffer where the near clip plane clips through a portal.
     void StencilPortalClip() {
-        //Vector4 leftEyePoint_CS = new Vector4();
-        //Vector4 leftEyeTangent_CS = new Vector4();
-        //Vector4 rightEyePoint_CS = new Vector4();
-        //Vector4 rightEyeTangent_CS = new Vector4();
-
         Vector4[] intersectionPoints_CS = new Vector4[] {
             new Vector4(), new Vector4()
         };
@@ -238,74 +199,36 @@ public class PortalCamera : MonoBehaviour {
 
         // Render full-screen quad that writes 0x01 to the stencil buffer in the fragments that
         // lie in the region clipping the portal plane.
-        //m_ClipStencilMaterial.SetFloat("_StereoOffset", stereoOffset);
         m_ClipStencilMaterial.SetVectorArray("_IntersectionPoint", intersectionPoints_CS);
         m_ClipStencilMaterial.SetVectorArray("_IntersectionTangent", intersectionTangents_CS);
-        //m_ClipStencilMaterial.SetVectorArray("_IntersectionPoint", new Vector4[] {
-        //    leftEyePoint_CS, rightEyePoint_CS
-        //});
-        //m_ClipStencilMaterial.SetVectorArray("_IntersectionTangent", new Vector4[] {
-        //    leftEyeTangent_CS, rightEyeTangent_CS
-        //});
-        //m_ClipStencilMaterial.SetVector("_IntersectionPoint[0]", leftEyePoint_CS);
-        //m_ClipStencilMaterial.SetVector("_IntersectionPoint[1]", rightEyePoint_CS);
-        //m_ClipStencilMaterial.SetVector("_IntersectionTangent[0]", leftEyeTangent_CS);
-        //m_ClipStencilMaterial.SetVector("_IntersectionTangent[1]", rightEyeTangent_CS);
         commandBuffer.DrawMesh(
             m_ScreenQuad, Matrix4x4.identity, m_ClipStencilMaterial,
             0, 0);
     }
 
-    public Transform TMP_SPHERE = null;
     bool GetClipLine(Camera.StereoscopicEye eye, out Vector3 linePoint_CS, out Vector3 lineTangent_CS) {
         linePoint_CS = new Vector3();
         lineTangent_CS = new Vector3();
-
-        // TODO: TEMPORARY! Just calculate for left eye for now.
-        if (eye == Camera.StereoscopicEye.Right) {
-            //return false;
-        }
 
         // The current eye's matrices.
         Matrix4x4 projectionMatrix = m_MainCamera.GetStereoProjectionMatrix(eye);
         Matrix4x4 viewMatrix = m_MainCamera.GetStereoViewMatrix(eye);
 
-        // The four near clip plane corners in clip space.
+        // A matrix containing some directions and positions in clip space
+        // that will be useful when transformed to view space and scene space.
         // In Unity, clip space always follows OpenGL convention (Z is [-1,1]),
-        Matrix4x4 clipCorners_CS = new Matrix4x4(
-            new Vector4(-1, 1, -1, 1),  // Top left
-            new Vector4(1, 1, -1, 1),   // Top right
-            new Vector4(-1, -1, -1, 1), // Bottom left
-            new Vector4(1, -1, -1, 1)   // Bottom right
-        );
-
-        // The three near clip plane direction vectors and center position vector in clip space.
-        // In Unity, clip space always follows OpenGL convention (right-handed, Z points out of the screen).
         Matrix4x4 clipPlane_CS = new Matrix4x4(
-            new Vector4(1, 0, 0, 0), // Right
-            new Vector4(0, 1, 0, 0), // Up
-            new Vector4(0, 0, 1, 0), // Forward
-            new Vector4(0, 0, -1, 1)  // Center position
+            new Vector4(1, 0, 0, 0),  // Right
+            new Vector4(0, 1, 0, 0),  // Up
+            new Vector4(0, 0, -1, 1), // Center position
+            new Vector4(1, 1, -1, 1)  // Top-right corner of near clip plane
         );
 
         // The clip plane corners and directions in view space.
-        Matrix4x4 clipCorners_VS = projectionMatrix.inverse * clipCorners_CS;
         Matrix4x4 clipPlane_VS = projectionMatrix.inverse * clipPlane_CS;
 
         // The clip plane corners and directions in scene space.
-        Matrix4x4 clipCorners_SS = viewMatrix.inverse * clipCorners_VS;
         Matrix4x4 clipPlane_SS = viewMatrix.inverse * clipPlane_VS;
-
-        // Transform the four clip plane corners into portal space to see which corners are behind the portal.
-        Matrix4x4 clipCorners_PS = m_Portal.StencilMesh.transform.worldToLocalMatrix * clipCorners_SS;
-
-        // Determine if all four corners of the near clip plane are behind the portal.
-        bool entireClipPlaneIsBehind = true;
-        for (int i = 0; i < 4; i++) {
-            if (clipCorners_PS.GetColumn(i).z < 0) {
-                entireClipPlaneIsBehind = false;
-            }
-        }
 
         // Definition of portal plane.
         Transform portalOpening = m_Portal.StencilMesh.transform;
@@ -314,46 +237,22 @@ public class PortalCamera : MonoBehaviour {
         Vector3 portalForward = portalOpening.TransformDirection(Vector3.forward);
         Vector3 portalCenter = portalOpening.position;
 
-        //// Definition of main camera's near clip plane. We're deriving these from knowing the four corners
-        //// of the clip plane in scene space.
-        //// First, the center is the midpoint of the four clip plane corners.
-        //Vector3 clipCenter = (
-        //    clipCorners_SS.GetColumn(0) +
-        //    clipCorners_SS.GetColumn(1) +
-        //    clipCorners_SS.GetColumn(2) +
-        //    clipCorners_SS.GetColumn(3)) / 4.0f;
-        //// The clip plane's right direction comes from the direction from the center point to the midpoint
-        //// of the top-right and bottom-right corners.
-        //Vector3 clipRight = (MathUtils.Vec4to3(clipCorners_SS.GetColumn(1) + clipCorners_SS.GetColumn(3)) / 2.0f - clipCenter).normalized;
-        //// The clip plane's up direction comes from the direction from the center point to the midpoint
-        //// of the top-left and top-right corners.
-        //Vector3 clipUp = (MathUtils.Vec4to3(clipCorners_SS.GetColumn(0) + clipCorners_SS.GetColumn(1)) / 2.0f - clipCenter).normalized;
-        //// The clip plane's forward direction comes from the cross of the right and up directions.
-        //Vector3 clipForward = Vector3.Cross(clipRight, clipUp).normalized;
-
         // Definition of the main camera's near clip plane in scene space.
-        Vector3 clipCenter = MathUtils.HomogenousToCartesian(clipPlane_SS.GetColumn(3));
+        Vector3 clipCenter = MathUtils.HomogenousToCartesian(clipPlane_SS.GetColumn(2));
         Vector3 clipRight = MathUtils.Vec4to3(clipPlane_SS.GetColumn(0)).normalized;
         Vector3 clipUp = MathUtils.Vec4to3(clipPlane_SS.GetColumn(1)).normalized;
-        // The projection matrix doesn't correctly invert the forward matrix, so derive it from the right and up cross products.
+        // The projection matrix doesn't correctly transform the forward matrix, so derive it from the right and up cross products.
         Vector3 clipForward = Vector3.Cross(clipRight, clipUp).normalized;
-        if (TMP_SPHERE != null) {
-            TMP_SPHERE.transform.position = clipCenter;
-        }
-
-        // The size of the clip plane comes from the view-space coordinates of the top-right corner, which
-        // is equivilant to the extents of the clip plane.
-        Vector3 clipSpaceCorner = MathUtils.HomogenousToCartesian(clipCorners_VS.GetColumn(1));
-        float clipWidth = clipSpaceCorner.x * 2;
-        float clipHeight = clipSpaceCorner.y * 2;
+        float clipWidth = clipPlane_VS.GetColumn(3).x * 2;
+        float clipHeight = clipPlane_VS.GetColumn(3).y * 2;
 
         // If clip plane quad is too far away from portal quad, stop early.
         float clipPortalDistance = PortalPointDistance(clipCenter);
         float diagClipDist = new Vector2(clipWidth / 2.0f, clipHeight / 2.0f).magnitude;
         float maxDist = Mathf.Lerp(clipHeight / 2, diagClipDist, Mathf.Abs(Vector3.Dot(clipRight, portalForward)));
         if (clipPortalDistance > maxDist) {
-            // TODO: FIX THIS
-            //return false;
+            // TODO: Make this smaller.
+            return false;
         }
 
         Matrix4x4 planeBases = new Matrix4x4(
@@ -361,7 +260,6 @@ public class PortalCamera : MonoBehaviour {
             MathUtils.Vec3to4(clipUp, 1),
             MathUtils.Vec3to4(-portalRight, 1),
             MathUtils.Vec3to4(-portalUp, 1));
-
         Vector4 planeCenters = MathUtils.Vec3to4(portalCenter - clipCenter, 0);
 
         // Calculate the coefficients for the parametric equations that define both coordinates.
@@ -415,37 +313,6 @@ public class PortalCamera : MonoBehaviour {
         Vector3 linePointB_CS = MathUtils.HomogenousToCartesian(
             projectionMatrix * viewMatrix * MathUtils.Vec3to4(linePoint + lineTangent, 1));
         lineTangent_CS = (linePointB_CS - linePoint_CS).normalized;
-
-        // Shift the intersection line by a small amount to ultimately
-        // partially overlap the true intersection line, preventing aliasing issues when
-        // stenciling in at the intersection line itself.
-        //Vector3 shiftDirection_CS = Vector3.Cross(lineTangent_CS, Vector3.forward);
-        //shiftDirection_CS.y *= m_MainCamera.aspect;
-        //linePoint_CS += shiftDirection_CS * 0.05f;
-
-        // Calculate stereoscopic horizontal offset for the clip line for each eye.
-        //float stereoOffset = 0;
-        //if (m_MainCamera.stereoEnabled) {
-        //    Vector4 rightEye_SS = MathUtils.Vec3to4(clipCenter + (clipRight * m_MainCamera.stereoSeparation / 2.0f), 1.0f);
-        //    Vector4 rightEye_CS = projectionMatrix * viewMatrix * rightEye_SS;
-        //    stereoOffset = MathUtils.HomogenousToCartesian(rightEye_CS).x;
-        //}
-
-        // If we're not fully behind the clip plane, determine if the clip intersection is in screen space
-        // at all, and return if not.
-        //if (!entireClipPlaneIsBehind) {
-        //    // The positions along the four edges of the near clip plane that the portal plane intersects.
-        //    float leftY = linePoint_CS.y - ((lineTangent_CS.y / lineTangent_CS.x) * (linePoint_CS.x + 1.0f));
-        //    float rightY = linePoint_CS.y - ((lineTangent_CS.y / lineTangent_CS.x) * (linePoint_CS.x - 1.0f));
-        //    float bottomX = linePoint_CS.x - ((lineTangent_CS.x / lineTangent_CS.y) * (linePoint_CS.y + 1.0f));
-        //    float topX = linePoint_CS.x - ((lineTangent_CS.x / lineTangent_CS.y) * (linePoint_CS.y - 1.0f));
-
-        //    float clipExtent = 1 + stereoOffset;
-        //    if ((bottomX < -clipExtent || bottomX > clipExtent) && (topX < -clipExtent || topX > clipExtent) &&
-        //        (leftY < -clipExtent || leftY > clipExtent) && (rightY < -clipExtent || rightY > clipExtent)) {
-        //        //return false;
-        //    }
-        //}
 
         return true;
     }
