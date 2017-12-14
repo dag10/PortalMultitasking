@@ -14,7 +14,14 @@ public class PortalCamera : MonoBehaviour {
     [SerializeField] private Material m_ClipStencilMaterial;
     [SerializeField] private Material m_ClearDepthWhereStencilMaterial;
 
+    [SerializeField] private bool Do_MakeZero = true;
+    [SerializeField] private bool Do_StencilPortal = true;
+    [SerializeField] private bool Do_StencilClip = true;
+    [SerializeField] private bool Do_UnstencilPortal = true;
+    [SerializeField] private bool Do_ClearDepth = true;
+
     private Camera m_MainCamera;
+    private Matrix4x4 xfMainCamera;
     private Vector3 m_OriginalMainCameraPosition;
     private Quaternion m_OriginalMainCameraRotation;
     private Camera m_PortalCamera;
@@ -23,9 +30,6 @@ public class PortalCamera : MonoBehaviour {
 
     void Start() {
         m_PortalCamera = GetComponent<Camera>();
-
-        // Enable this camera, because we disable it in the editor for convenience.
-        //m_PortalCamera.enabled = true;
 
         // Create quad mesh with dimensions consistent with the Quad builtin dimensions.
         m_ScreenQuad = new Mesh();
@@ -127,37 +131,6 @@ public class PortalCamera : MonoBehaviour {
         // Create a matrix for fragments to transform themselves to portal-space and determine
         // which side of the portal plane they lie on.
         Shader.SetGlobalMatrix("_InvPortal", m_Portal.LinkedPortal.StencilMesh.transform.localToWorldMatrix.inverse);
-
-        MoveMainCamera();
-    }
-
-    private Matrix4x4 xfMainCamera;
-
-    public bool Do_MakeZero = true;
-    public bool Do_StencilPortal = true;
-    public bool Do_StencilClip = true;
-    public bool Do_UnstencilPortal = true;
-    public bool Do_ClearDepth = true;
-
-    private void MoveMainCamera() {
-        //// Store the main camera's position and temporarily move the main camera to where we are so that lights render
-        //// correctly.
-        //m_OriginalMainCameraPosition = m_MainCamera.transform.position;
-        //m_OriginalMainCameraRotation = m_MainCamera.transform.rotation;
-        //m_MainCamera.transform.position = transform.position;
-        //m_MainCamera.transform.rotation = transform.rotation;
-        //m_MainCamera.gameObject.tag = "Untagged";
-        //gameObject.tag = "MainCamera";
-    }
-
-    private void PutMainCameraBack() {
-        //m_MainCamera.transform.position = m_OriginalMainCameraPosition;
-        //m_MainCamera.transform.rotation = m_OriginalMainCameraRotation;
-        //m_MainCamera.gameObject.tag = "MainCamera";
-        //gameObject.tag = "Untagged";
-    }
-
-    public void OnPreRender() {
     }
 
     public void OnPostRender() {
@@ -166,9 +139,6 @@ public class PortalCamera : MonoBehaviour {
 
         // Clear the portal inverse transformation shader variable for future renderings.
         Shader.SetGlobalMatrix("_InvPortal", Matrix4x4.zero);
-
-        // Move the main camera back to where it belongs.
-        PutMainCameraBack();
 
         commandBuffer.Clear();
     }
@@ -280,7 +250,6 @@ public class PortalCamera : MonoBehaviour {
         // The current eye's matrices.
         Matrix4x4 projectionMatrix;
         Matrix4x4 viewMatrix;
-        PutMainCameraBack();
         if (eye.HasValue) {
             projectionMatrix = m_MainCamera.GetStereoProjectionMatrix(eye.Value);
             viewMatrix = m_MainCamera.GetStereoViewMatrix(eye.Value);
@@ -290,7 +259,6 @@ public class PortalCamera : MonoBehaviour {
         }
         Matrix4x4 viewMatrixInverse = viewMatrix.inverse;
         Matrix4x4 gpuProjectionMatrix = GL.GetGPUProjectionMatrix(projectionMatrix, false);
-        MoveMainCamera();
 
         // A matrix containing some directions and positions in clip space
         // that will be useful when transformed to view space and scene space.
