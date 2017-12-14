@@ -1,15 +1,16 @@
-﻿Shader "Portals/PortalStencil"
+﻿Shader "Portals/ClearScreenStencil"
 {
 	SubShader
 	{
-		// Writes 0x01 in the stencil buffer for the portal opening.
+		// Zeros out the entire stencil buffer, but preserves the depth buffer.
 		Pass
 		{
 			Stencil {
-				Ref 1
-				Pass Replace
+				Comp Always
+				Pass Zero
 			}
 
+			ZTest Off
 			ZWrite Off
 			ColorMask 0
 			Cull Off
@@ -33,13 +34,15 @@
 			v2f vert (appdata v)
 			{
 				v2f o;
-				o.vertex = UnityObjectToClipPos(v.vertex);
+				o.vertex = v.vertex;
+				o.vertex.xy *= 2; // Quad mesh vertices only extend to +- 0.5, so we double it to fill the clip space.
+				o.vertex.z = 1;   // Render quad at back of clip space to clear the depth buffer.
 				return o;
 			}
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-				return fixed4(1, 1, 1, 1);
+				return fixed4(1, 0, 0, 1);
 			}
 			ENDCG
 		}

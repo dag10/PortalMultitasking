@@ -5,14 +5,17 @@ using UnityEngine.Rendering;
 
 public class PortalCamera : MonoBehaviour {
     private enum StencilShaderPasses {
-        PASS_STENCIL_0_SCREEN = 0,
-        PASS_STENCIL_1_SCREEN = 1,
+        PASS_STENCIL_1_SCREEN = 0,
+        PASS_STENCIL_0_SCREEN = 1,
         PASS_STENCIL_DEPTH_RESET = 2,
         PASS_STENCIL_1_PORTAL = 3,
     }
 
     [SerializeField] private Portal m_Portal;
-    [SerializeField] private Material m_StencilMaterial;
+    [SerializeField] private Material m_ClearScreenStencilMaterial;
+    [SerializeField] private Material m_SetScreenStencilMaterial;
+    [SerializeField] private Material m_PortalStencilMaterial;
+    [SerializeField] private Material m_ClearDepthWhereStencilMaterial;
 
     private Camera m_MainCamera;
     private Camera m_PortalCamera;
@@ -97,22 +100,22 @@ public class PortalCamera : MonoBehaviour {
     // Writes 0x00 to the entire stencil buffer.
     void MakeStencilBufferZero(CommandBuffer commands) {
         commands.DrawMesh(
-            m_ScreenQuad, Matrix4x4.identity, m_StencilMaterial,
-            0, (int)StencilShaderPasses.PASS_STENCIL_0_SCREEN);
+            m_ScreenQuad, Matrix4x4.identity, m_ClearScreenStencilMaterial,
+            0, 0);
     }
 
     // Writes 0x01 to the entire stencil buffer.
     void MakeStencilBufferOne(CommandBuffer commands) {
         commands.DrawMesh(
-            m_ScreenQuad, Matrix4x4.identity, m_StencilMaterial,
-            0, (int)StencilShaderPasses.PASS_STENCIL_1_SCREEN);
+            m_ScreenQuad, Matrix4x4.identity, m_SetScreenStencilMaterial,
+            0, 0);
     }
 
     // Clears the depth buffer where the stencil buffer is 0x01.
     void ClearDepthUnderStencil(CommandBuffer commands) {
         commands.DrawMesh(
-            m_ScreenQuad, Matrix4x4.identity, m_StencilMaterial,
-            0, (int)StencilShaderPasses.PASS_STENCIL_DEPTH_RESET);
+            m_ScreenQuad, Matrix4x4.identity, m_ClearDepthWhereStencilMaterial,
+            0, 0);
     }
 
     // Writes 0x01 to the stencil buffer where the portal is.
@@ -137,8 +140,8 @@ public class PortalCamera : MonoBehaviour {
         commands.DrawMesh(
             portal.StencilMesh.mesh,
             modelMatrix,
-            m_StencilMaterial,
+            m_PortalStencilMaterial,
             0,
-            (int)StencilShaderPasses.PASS_STENCIL_1_PORTAL);
+            0);
     }
 }
