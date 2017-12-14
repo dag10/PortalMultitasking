@@ -244,6 +244,13 @@ public class PortalCamera : MonoBehaviour {
         // to write to the stencil buffer.
         bool topLeftIsBehind = (clipCorners_PS.GetColumn(0).z > 0);
 
+        // Calculate stereoscopic horizontal offset for the clip line for each eye.
+        if (m_MainCamera.stereoEnabled) {
+            Vector4 rightEye_SS = MathUtils.Vec3to4(clipCenter + (clipRight * m_MainCamera.stereoSeparation / 2.0f), 1.0f);
+            Vector4 rightEye_CS = m_MainCamera.projectionMatrix * m_MainCamera.worldToCameraMatrix * rightEye_SS;
+            m_ClipStencilMaterial.SetFloat("_StereoOffset", MathUtils.HomogenousToCartesian(rightEye_CS).x);
+        }
+
         m_ClipStencilMaterial.SetInt("_TopLeftCornerClipped", topLeftIsBehind ? 1 : 0);
         m_ClipStencilMaterial.SetVector("_IntersectionPoint", MathUtils.Vec3to4(linePoint_CS, 1));
         m_ClipStencilMaterial.SetVector("_IntersectionTangent", MathUtils.Vec3to4(lineTangent_CS, 1));
