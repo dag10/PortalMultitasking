@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: TeleportAreaVisible
-  m_Shader: {fileID: 4800000, guid: 787d7485aa6482341a9f55fa37fb84f1, type: 3}
+  m_Shader: {fileID: 4800000, guid: 2aeb3008ad760e34db0c62bbc90d7cb7, type: 3}
   m_ShaderKeywords: RECEIVE_SHADOWS S_SPECULAR_NONE S_UNLIT _ALPHAPREMULTIPLY_ON _EMISSION
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0

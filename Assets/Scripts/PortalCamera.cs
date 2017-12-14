@@ -279,6 +279,7 @@ public class PortalCamera : MonoBehaviour {
             projectionMatrix = m_MainCamera.projectionMatrix;
             viewMatrix = m_MainCamera.worldToCameraMatrix;
         }
+        Matrix4x4 viewMatrixInverse = viewMatrix.inverse;
         Matrix4x4 gpuProjectionMatrix = GL.GetGPUProjectionMatrix(projectionMatrix, false);
         MoveMainCamera();
 
@@ -296,7 +297,7 @@ public class PortalCamera : MonoBehaviour {
         Matrix4x4 clipPlane_VS = projectionMatrix.inverse * clipPlane_CS;
 
         // The clip plane corners and directions in scene space.
-        Matrix4x4 clipPlane_SS = viewMatrix.inverse * clipPlane_VS;
+        Matrix4x4 clipPlane_SS = viewMatrixInverse * clipPlane_VS;
 
         // Definition of portal plane.
         Transform portalOpening = m_Portal.StencilMesh.transform;
@@ -316,9 +317,9 @@ public class PortalCamera : MonoBehaviour {
         float clipHeight = clipTopRight_VS.y * 2;
 
         // Calculate portal-space position of eye origin.
-        Vector3 eyePosition_SS = MathUtils.HomogenousToCartesian(viewMatrix.inverse * new Vector4(0, 0, 0, 1));
+        Vector3 eyePosition_SS = MathUtils.HomogenousToCartesian(viewMatrixInverse * new Vector4(0, 0, 0, 1));
         Vector3 eyePosition_PS = MathUtils.HomogenousToCartesian(
-            portalOpening.worldToLocalMatrix * viewMatrix.inverse * new Vector4(0, 0, 0, 1));
+            portalOpening.worldToLocalMatrix * viewMatrixInverse * new Vector4(0, 0, 0, 1));
         eyePortalDistance = eyePosition_PS.z;
 
         // If clip plane quad is too far away from portal quad, stop early.
