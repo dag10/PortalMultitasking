@@ -11,7 +11,7 @@ public class PortalManager : MonoBehaviour {
         public Portal _HomePortal;
     }
 
-    [SerializeField] private AppPortals[] m_Apps;
+    [SerializeField] private List<AppPortals> m_Apps;
     [SerializeField] private Player m_Player;
 
     private static PortalManager s_Instance;
@@ -31,9 +31,15 @@ public class PortalManager : MonoBehaviour {
     }
 
     void Start() {
-        foreach (var app in m_Apps) {
-            app._HomePortal.m_PortalType = Portal.PortalType.Home;
-            app._AppPortal.m_PortalType = Portal.PortalType.App;
+        for (int i = 0; i < m_Apps.Count; i++) {
+            if (!m_Apps[i]._App.gameObject.activeSelf) {
+                m_Apps[i]._HomePortal.gameObject.SetActive(false);
+                m_Apps.RemoveAt(i);
+                i--;
+            }
+
+            m_Apps[i]._HomePortal.m_PortalType = Portal.PortalType.Home;
+            m_Apps[i]._AppPortal.m_PortalType = Portal.PortalType.App;
         }
     }
 

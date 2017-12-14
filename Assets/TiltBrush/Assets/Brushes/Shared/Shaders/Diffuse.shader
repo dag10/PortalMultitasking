@@ -24,6 +24,13 @@ SubShader {
   LOD 200
   Cull Back
 
+	// Only render this material where the stencil buffer has 0x01.
+	Stencil {
+		Ref 1
+		Comp Equal
+		Pass Keep
+	}
+
 CGPROGRAM
 #pragma surface surf Lambert vertex:vert alphatest:_Cutoff addshadow
 #pragma multi_compile __ TBT_LINEAR_TARGET
@@ -35,6 +42,7 @@ fixed4 _Color;
 struct Input {
   float2 uv_MainTex;
   float4 color : COLOR;
+  float3 worldPos;
 };
 
 void vert (inout appdata_full v) {
@@ -42,6 +50,7 @@ void vert (inout appdata_full v) {
 }
 
 void surf (Input IN, inout SurfaceOutput o) {
+	PortalClip(IN.worldPos);
   fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
   o.Albedo = c.rgb * IN.color.rgb;
   o.Alpha = c.a * IN.color.a;

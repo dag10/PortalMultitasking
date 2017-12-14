@@ -25,22 +25,22 @@ Shader "PortalFriendly/Nature/Terrain/Diffuse" {
 		fixed _EyePortalDistances[2];
 
 		// Extended from TerrainSplatmapCommon.cginc
-		struct Input {
-			float2 uv_Splat0 : TEXCOORD0;
-			float2 uv_Splat1 : TEXCOORD1;
-			float2 uv_Splat2 : TEXCOORD2;
-			float2 uv_Splat3 : TEXCOORD3;
-			float2 tc_Control : TEXCOORD4;  // Not prefixing '_Contorl' with 'uv' allows a tighter packing of interpolators, which is necessary to support directional lightmap.
-			UNITY_FOG_COORDS(5)
-		};
+		//struct Input {
+		//	float2 uv_Splat0 : TEXCOORD0;
+		//	float2 uv_Splat1 : TEXCOORD1;
+		//	float2 uv_Splat2 : TEXCOORD2;
+		//	float2 uv_Splat3 : TEXCOORD3;
+		//	float2 tc_Control : TEXCOORD4;  // Not prefixing '_Contorl' with 'uv' allows a tighter packing of interpolators, which is necessary to support directional lightmap.
+		//	UNITY_FOG_COORDS(5)
+		//};
 
         void surf(Input IN, inout SurfaceOutput o)
         {
 			//// If rendering through a portal, discard fragments between the back of the portal and the camera.
-			if (_InvPortal[3][3] != 0 && _EyePortalDistances[unity_StereoEyeIndex] < 0) {
-				//fixed4 portalPos = mul(_InvPortal, fixed4(IN.worldPos, 1));
-				//clip(-portalPos.z);
-			}
+			//if (_InvPortal[3][3] != 0 && _EyePortalDistances[unity_StereoEyeIndex] < 0) {
+			//	//fixed4 portalPos = mul(_InvPortal, fixed4(IN.worldPos, 1));
+			//	//clip(-portalPos.z);
+			//}
 
             half4 splat_control;
             half weight;
@@ -59,12 +59,24 @@ Shader "PortalFriendly/Nature/Terrain/Diffuse" {
         // TODO: Seems like "#pragma target 3.0 _TERRAIN_NORMAL_MAP" can't fallback correctly on less capable devices?
         // Use two sub-shaders to simulate different features for different targets and still fallback correctly.
         SubShader { // for sm3.0+ targets
+		// Only render this material where the stencil buffer has 0x01.
+		Stencil {
+			Ref 1
+			Comp Equal
+			Pass Keep
+		}
             CGPROGRAM
                 #pragma target 3.0
                 #pragma multi_compile __ _TERRAIN_NORMAL_MAP
             ENDCG
         }
         SubShader { // for sm2.0 targets
+		// Only render this material where the stencil buffer has 0x01.
+		Stencil {
+			Ref 1
+			Comp Equal
+			Pass Keep
+		}
             CGPROGRAM
             ENDCG
         }

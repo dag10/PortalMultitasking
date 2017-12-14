@@ -1,0 +1,262 @@
+fileFormatVersion: 2
+guid: ddcaeb46c7e0235419f36062263d36a6
+timeCreated: 1513152769
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Tilt_Brush_Intro_Sketch_DoubleTaperedFlat_geo
+    100004: Tilt_Brush_Intro_Sketch_DoubleTaperedMarker_geo
+    100006: Tilt_Brush_Intro_Sketch_Flat_geo
+    100008: Tilt_Brush_Intro_Sketch_Ink_geo
+    100010: Tilt_Brush_Intro_Sketch_Marker_geo
+    100012: Tilt_Brush_Intro_Sketch_Marker_geo 1
+    100014: Tilt_Brush_Intro_Sketch_Marker_geo 2
+    100016: Tilt_Brush_Intro_Sketch_Marker_geo 3
+    100018: Tilt_Brush_Intro_Sketch_Marker_geo 4
+    100020: Tilt_Brush_Intro_Sketch_Marker_geo 5
+    100022: Tilt_Brush_Intro_Sketch_Marker_geo 6
+    100024: Tilt_Brush_Intro_Sketch_OilPaint_geo
+    100026: Tilt_Brush_Intro_Sketch_OilPaint_geo 1
+    100028: Tilt_Brush_Intro_Sketch_OilPaint_geo 2
+    100030: Tilt_Brush_Intro_Sketch_OilPaint_geo 3
+    100032: Tilt_Brush_Intro_Sketch_OilPaint_geo 4
+    100034: Tilt_Brush_Intro_Sketch_OilPaint_geo 5
+    100036: Tilt_Brush_Intro_Sketch_Paper_geo
+    100038: Tilt_Brush_Intro_Sketch_Paper_geo 1
+    100040: Tilt_Brush_Intro_Sketch_Smoke_geo
+    100042: Tilt_Brush_Intro_Sketch_SoftHighlighter_geo
+    100044: Tilt_Brush_Intro_Sketch_Streamers_geo
+    100046: Tilt_Brush_Intro_Sketch_TaperedFlat_geo
+    100048: Tilt_Brush_Intro_Sketch_TaperedFlat_geo 1
+    100050: Tilt_Brush_Intro_Sketch_TaperedMarker_geo
+    100052: Tilt_Brush_Intro_Sketch_ThickPaint_geo
+    100054: Tilt_Brush_Intro_Sketch_Wire_geo
+    100056: Tilt_Brush_Intro_Sketch_Wire_geo 1
+    100058: Tilt_Brush_Intro_Sketch_Wire_geo 1_MeshPart0
+    100060: Tilt_Brush_Intro_Sketch_Wire_geo 1_MeshPart1
+    100062: Tilt_Brush_Intro_Sketch_Wire_geo 2
+    100064: Tilt_Brush_Intro_Sketch_Wire_geo 2_MeshPart0
+    100066: Tilt_Brush_Intro_Sketch_Wire_geo 2_MeshPart1
+    100068: Tilt_Brush_Intro_Sketch_Wire_geo 3
+    100070: Tilt_Brush_Intro_Sketch_Wire_geo 3_MeshPart0
+    100072: Tilt_Brush_Intro_Sketch_Wire_geo 3_MeshPart1
+    100074: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart0
+    100076: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart1
+    400000: //RootNode
+    400002: Tilt_Brush_Intro_Sketch_DoubleTaperedFlat_geo
+    400004: Tilt_Brush_Intro_Sketch_DoubleTaperedMarker_geo
+    400006: Tilt_Brush_Intro_Sketch_Flat_geo
+    400008: Tilt_Brush_Intro_Sketch_Ink_geo
+    400010: Tilt_Brush_Intro_Sketch_Marker_geo
+    400012: Tilt_Brush_Intro_Sketch_Marker_geo 1
+    400014: Tilt_Brush_Intro_Sketch_Marker_geo 2
+    400016: Tilt_Brush_Intro_Sketch_Marker_geo 3
+    400018: Tilt_Brush_Intro_Sketch_Marker_geo 4
+    400020: Tilt_Brush_Intro_Sketch_Marker_geo 5
+    400022: Tilt_Brush_Intro_Sketch_Marker_geo 6
+    400024: Tilt_Brush_Intro_Sketch_OilPaint_geo
+    400026: Tilt_Brush_Intro_Sketch_OilPaint_geo 1
+    400028: Tilt_Brush_Intro_Sketch_OilPaint_geo 2
+    400030: Tilt_Brush_Intro_Sketch_OilPaint_geo 3
+    400032: Tilt_Brush_Intro_Sketch_OilPaint_geo 4
+    400034: Tilt_Brush_Intro_Sketch_OilPaint_geo 5
+    400036: Tilt_Brush_Intro_Sketch_Paper_geo
+    400038: Tilt_Brush_Intro_Sketch_Paper_geo 1
+    400040: Tilt_Brush_Intro_Sketch_Smoke_geo
+    400042: Tilt_Brush_Intro_Sketch_SoftHighlighter_geo
+    400044: Tilt_Brush_Intro_Sketch_Streamers_geo
+    400046: Tilt_Brush_Intro_Sketch_TaperedFlat_geo
+    400048: Tilt_Brush_Intro_Sketch_TaperedFlat_geo 1
+    400050: Tilt_Brush_Intro_Sketch_TaperedMarker_geo
+    400052: Tilt_Brush_Intro_Sketch_ThickPaint_geo
+    400054: Tilt_Brush_Intro_Sketch_Wire_geo
+    400056: Tilt_Brush_Intro_Sketch_Wire_geo 1
+    400058: Tilt_Brush_Intro_Sketch_Wire_geo 1_MeshPart0
+    400060: Tilt_Brush_Intro_Sketch_Wire_geo 1_MeshPart1
+    400062: Tilt_Brush_Intro_Sketch_Wire_geo 2
+    400064: Tilt_Brush_Intro_Sketch_Wire_geo 2_MeshPart0
+    400066: Tilt_Brush_Intro_Sketch_Wire_geo 2_MeshPart1
+    400068: Tilt_Brush_Intro_Sketch_Wire_geo 3
+    400070: Tilt_Brush_Intro_Sketch_Wire_geo 3_MeshPart0
+    400072: Tilt_Brush_Intro_Sketch_Wire_geo 3_MeshPart1
+    400074: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart0
+    400076: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart1
+    2300000: Tilt_Brush_Intro_Sketch_DoubleTaperedFlat_geo
+    2300002: Tilt_Brush_Intro_Sketch_DoubleTaperedMarker_geo
+    2300004: Tilt_Brush_Intro_Sketch_Flat_geo
+    2300006: Tilt_Brush_Intro_Sketch_Ink_geo
+    2300008: Tilt_Brush_Intro_Sketch_Marker_geo
+    2300010: Tilt_Brush_Intro_Sketch_Marker_geo 1
+    2300012: Tilt_Brush_Intro_Sketch_Marker_geo 2
+    2300014: Tilt_Brush_Intro_Sketch_Marker_geo 3
+    2300016: Tilt_Brush_Intro_Sketch_Marker_geo 4
+    2300018: Tilt_Brush_Intro_Sketch_Marker_geo 5
+    2300020: Tilt_Brush_Intro_Sketch_Marker_geo 6
+    2300022: Tilt_Brush_Intro_Sketch_OilPaint_geo
+    2300024: Tilt_Brush_Intro_Sketch_OilPaint_geo 1
+    2300026: Tilt_Brush_Intro_Sketch_OilPaint_geo 2
+    2300028: Tilt_Brush_Intro_Sketch_OilPaint_geo 3
+    2300030: Tilt_Brush_Intro_Sketch_OilPaint_geo 4
+    2300032: Tilt_Brush_Intro_Sketch_OilPaint_geo 5
+    2300034: Tilt_Brush_Intro_Sketch_Paper_geo
+    2300036: Tilt_Brush_Intro_Sketch_Paper_geo 1
+    2300038: Tilt_Brush_Intro_Sketch_Smoke_geo
+    2300040: Tilt_Brush_Intro_Sketch_SoftHighlighter_geo
+    2300042: Tilt_Brush_Intro_Sketch_Streamers_geo
+    2300044: Tilt_Brush_Intro_Sketch_TaperedFlat_geo
+    2300046: Tilt_Brush_Intro_Sketch_TaperedFlat_geo 1
+    2300048: Tilt_Brush_Intro_Sketch_TaperedMarker_geo
+    2300050: Tilt_Brush_Intro_Sketch_ThickPaint_geo
+    2300052: Tilt_Brush_Intro_Sketch_Wire_geo 1_MeshPart0
+    2300054: Tilt_Brush_Intro_Sketch_Wire_geo 1_MeshPart1
+    2300056: Tilt_Brush_Intro_Sketch_Wire_geo 2_MeshPart0
+    2300058: Tilt_Brush_Intro_Sketch_Wire_geo 2_MeshPart1
+    2300060: Tilt_Brush_Intro_Sketch_Wire_geo 3_MeshPart0
+    2300062: Tilt_Brush_Intro_Sketch_Wire_geo 3_MeshPart1
+    2300064: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart0
+    2300066: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart1
+    3300000: Tilt_Brush_Intro_Sketch_DoubleTaperedFlat_geo
+    3300002: Tilt_Brush_Intro_Sketch_DoubleTaperedMarker_geo
+    3300004: Tilt_Brush_Intro_Sketch_Flat_geo
+    3300006: Tilt_Brush_Intro_Sketch_Ink_geo
+    3300008: Tilt_Brush_Intro_Sketch_Marker_geo
+    3300010: Tilt_Brush_Intro_Sketch_Marker_geo 1
+    3300012: Tilt_Brush_Intro_Sketch_Marker_geo 2
+    3300014: Tilt_Brush_Intro_Sketch_Marker_geo 3
+    3300016: Tilt_Brush_Intro_Sketch_Marker_geo 4
+    3300018: Tilt_Brush_Intro_Sketch_Marker_geo 5
+    3300020: Tilt_Brush_Intro_Sketch_Marker_geo 6
+    3300022: Tilt_Brush_Intro_Sketch_OilPaint_geo
+    3300024: Tilt_Brush_Intro_Sketch_OilPaint_geo 1
+    3300026: Tilt_Brush_Intro_Sketch_OilPaint_geo 2
+    3300028: Tilt_Brush_Intro_Sketch_OilPaint_geo 3
+    3300030: Tilt_Brush_Intro_Sketch_OilPaint_geo 4
+    3300032: Tilt_Brush_Intro_Sketch_OilPaint_geo 5
+    3300034: Tilt_Brush_Intro_Sketch_Paper_geo
+    3300036: Tilt_Brush_Intro_Sketch_Paper_geo 1
+    3300038: Tilt_Brush_Intro_Sketch_Smoke_geo
+    3300040: Tilt_Brush_Intro_Sketch_SoftHighlighter_geo
+    3300042: Tilt_Brush_Intro_Sketch_Streamers_geo
+    3300044: Tilt_Brush_Intro_Sketch_TaperedFlat_geo
+    3300046: Tilt_Brush_Intro_Sketch_TaperedFlat_geo 1
+    3300048: Tilt_Brush_Intro_Sketch_TaperedMarker_geo
+    3300050: Tilt_Brush_Intro_Sketch_ThickPaint_geo
+    3300052: Tilt_Brush_Intro_Sketch_Wire_geo 1_MeshPart0
+    3300054: Tilt_Brush_Intro_Sketch_Wire_geo 1_MeshPart1
+    3300056: Tilt_Brush_Intro_Sketch_Wire_geo 2_MeshPart0
+    3300058: Tilt_Brush_Intro_Sketch_Wire_geo 2_MeshPart1
+    3300060: Tilt_Brush_Intro_Sketch_Wire_geo 3_MeshPart0
+    3300062: Tilt_Brush_Intro_Sketch_Wire_geo 3_MeshPart1
+    3300064: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart0
+    3300066: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart1
+    4300000: Tilt_Brush_Intro_Sketch_Marker_geo
+    4300002: Tilt_Brush_Intro_Sketch_Marker_geo
+    4300004: Tilt_Brush_Intro_Sketch_Marker_geo
+    4300006: Tilt_Brush_Intro_Sketch_Marker_geo
+    4300008: Tilt_Brush_Intro_Sketch_Marker_geo
+    4300010: Tilt_Brush_Intro_Sketch_Marker_geo
+    4300012: Tilt_Brush_Intro_Sketch_Marker_geo
+    4300014: Tilt_Brush_Intro_Sketch_DoubleTaperedFlat_geo
+    4300016: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart0
+    4300018: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart1
+    4300020: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart0
+    4300022: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart1
+    4300024: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart0
+    4300026: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart1
+    4300028: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart0
+    4300030: Tilt_Brush_Intro_Sketch_Wire_geo_MeshPart1
+    4300032: Tilt_Brush_Intro_Sketch_Flat_geo
+    4300034: Tilt_Brush_Intro_Sketch_OilPaint_geo
+    4300036: Tilt_Brush_Intro_Sketch_OilPaint_geo
+    4300038: Tilt_Brush_Intro_Sketch_OilPaint_geo
+    4300040: Tilt_Brush_Intro_Sketch_OilPaint_geo
+    4300042: Tilt_Brush_Intro_Sketch_OilPaint_geo
+    4300044: Tilt_Brush_Intro_Sketch_OilPaint_geo
+    4300046: Tilt_Brush_Intro_Sketch_Ink_geo
+    4300048: Tilt_Brush_Intro_Sketch_Smoke_geo
+    4300050: Tilt_Brush_Intro_Sketch_SoftHighlighter_geo
+    4300052: Tilt_Brush_Intro_Sketch_TaperedFlat_geo
+    4300054: Tilt_Brush_Intro_Sketch_TaperedFlat_geo
+    4300056: Tilt_Brush_Intro_Sketch_TaperedMarker_geo
+    4300058: Tilt_Brush_Intro_Sketch_DoubleTaperedMarker_geo
+    4300060: Tilt_Brush_Intro_Sketch_Paper_geo
+    4300062: Tilt_Brush_Intro_Sketch_Paper_geo
+    4300064: Tilt_Brush_Intro_Sketch_ThickPaint_geo
+    4300066: Tilt_Brush_Intro_Sketch_Streamers_geo
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 0
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -3,6 +3,7 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
+		_Color ("Color", Color) = (1,1,1,1)
 	}
 	SubShader
 	{
@@ -42,6 +43,7 @@
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
+			fixed4 _Color;
 			fixed4x4 _InvPortal;
 			fixed _EyePortalDistances[2];
 				
@@ -67,6 +69,7 @@
 				fixed4 col = tex2D(_MainTex, i.uv);
 				// apply fog
 				UNITY_APPLY_FOG(i.fogCoord, col);
+				col *= _Color;
 				return col;
 			}
 			ENDCG

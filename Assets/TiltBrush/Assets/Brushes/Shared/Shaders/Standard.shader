@@ -22,6 +22,13 @@ Properties {
   _Cutoff ("Alpha cutoff", Range(0,1)) = 0.5
 }
     SubShader {
+	// Only render this material where the stencil buffer has 0x01.
+	Stencil {
+		Ref 1
+		Comp Equal
+		Pass Keep
+	}
+		
     Tags {"Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout"}
     LOD 400
     Cull Back
@@ -38,6 +45,7 @@ Properties {
       float2 uv_MainTex;
       float2 uv_BumpMap;
       float4 color : Color;
+	  float3 worldPos;
     };
 
     sampler2D _MainTex;
@@ -52,6 +60,7 @@ Properties {
     }
 
     void surf (Input IN, inout SurfaceOutputStandardSpecular o) {
+		PortalClip(IN.worldPos);
       fixed4 tex = tex2D(_MainTex, IN.uv_MainTex);
       o.Albedo = tex.rgb * _Color.rgb * IN.color.rgb;
       o.Smoothness = _Shininess;

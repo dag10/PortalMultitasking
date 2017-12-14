@@ -25,6 +25,12 @@ Category {
   Cull Off Lighting Off ZWrite Off Fog { Color (0,0,0,0) }
 
   SubShader {
+		// Only render this material where the stencil buffer has 0x01.
+		Stencil {
+			Ref 1
+			Comp Equal
+			Pass Keep
+		}
     Pass {
 
       CGPROGRAM
@@ -48,6 +54,7 @@ Category {
         float4 vertex : POSITION;
         fixed4 color : COLOR;
         float2 texcoord : TEXCOORD0;
+		float3 worldPos : POSITIONT;
       };
 
       float4 _MainTex_ST;
@@ -67,6 +74,7 @@ Category {
         o.color = TbVertToNative(v.color);
 #endif
         o.vertex = UnityObjectToClipPos(v.vertex);
+		o.worldPos = mul(unity_ObjectToWorld, v.vertex);
 
         return o;
 
@@ -74,6 +82,7 @@ Category {
 
       fixed4 frag (v2f i) : COLOR
       {
+		  PortalClip(i.worldPos);
          half4 c = tex2D(_MainTex, i.texcoord );
         return i.color * c;
       }
