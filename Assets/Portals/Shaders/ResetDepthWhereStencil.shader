@@ -36,7 +36,11 @@
 				v2f o;
 				o.vertex = v.vertex;
 				o.vertex.xy *= 2; // Quad mesh vertices only extend to +- 0.5, so we double it to fill the clip space.
-				o.vertex.z = 1;
+#if defined(SHADER_API_D3D9) | defined(SHADER_API_D3D11)
+				o.vertex.z = 0;   // Render quad at back of clip space to clear the depth buffer.
+#else
+				o.vertex.z = 1;   // Render quad at back of clip space to clear the depth buffer.
+#endif
 				return o;
 			}
 			
