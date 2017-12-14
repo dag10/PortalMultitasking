@@ -53,8 +53,12 @@ public class PortalCamera : MonoBehaviour {
             }
         }
 
+        m_PortalCamera.enabled = false;
         m_PortalCamera.nearClipPlane = m_MainCamera.nearClipPlane;
         m_PortalCamera.farClipPlane = m_MainCamera.farClipPlane;
+        m_PortalCamera.stereoTargetEye = m_MainCamera.stereoTargetEye;
+        m_PortalCamera.fieldOfView = m_MainCamera.fieldOfView;
+        m_PortalCamera.enabled = true;
     }
 
     public void OnPreCull() {
@@ -196,16 +200,24 @@ public class PortalCamera : MonoBehaviour {
 
         float[] eyePortalDistances = new float[2];
 
-        Vector3 leftEyePoint_CS_Euler, leftEyeTangent_CS_Euler;
-        if (GetEyeClipInfo(Camera.StereoscopicEye.Left, out leftEyePoint_CS_Euler, out leftEyeTangent_CS_Euler, out eyePortalDistances[0])) {
-            intersectionPoints_CS[0] = MathUtils.Vec3to4(leftEyePoint_CS_Euler, 1);
-            intersectionTangents_CS[0] = MathUtils.Vec3to4(leftEyeTangent_CS_Euler, 1);
-        }
+        if (m_MainCamera.stereoEnabled) { // Rendering to HMD
+            Vector3 leftEyePoint_CS_Euler, leftEyeTangent_CS_Euler;
+            if (GetEyeClipInfo(Camera.StereoscopicEye.Left, out leftEyePoint_CS_Euler, out leftEyeTangent_CS_Euler, out eyePortalDistances[0])) {
+                intersectionPoints_CS[0] = MathUtils.Vec3to4(leftEyePoint_CS_Euler, 1);
+                intersectionTangents_CS[0] = MathUtils.Vec3to4(leftEyeTangent_CS_Euler, 1);
+            }
 
-        Vector3 rightEyePoint_CS_Euler, rightEyeTangent_CS_Euler;
-        if (GetEyeClipInfo(Camera.StereoscopicEye.Right, out rightEyePoint_CS_Euler, out rightEyeTangent_CS_Euler, out eyePortalDistances[1])) {
-            intersectionPoints_CS[1] = MathUtils.Vec3to4(rightEyePoint_CS_Euler, 1);
-            intersectionTangents_CS[1] = MathUtils.Vec3to4(rightEyeTangent_CS_Euler, 1);
+            Vector3 rightEyePoint_CS_Euler, rightEyeTangent_CS_Euler;
+            if (GetEyeClipInfo(Camera.StereoscopicEye.Right, out rightEyePoint_CS_Euler, out rightEyeTangent_CS_Euler, out eyePortalDistances[1])) {
+                intersectionPoints_CS[1] = MathUtils.Vec3to4(rightEyePoint_CS_Euler, 1);
+                intersectionTangents_CS[1] = MathUtils.Vec3to4(rightEyeTangent_CS_Euler, 1);
+            }
+        } else { // Rendering in 2D mode
+            Vector3 eyePoint_CS, eyeTangent_CS;
+            if (GetEyeClipInfo(null, out eyePoint_CS, out eyeTangent_CS, out eyePortalDistances[0])) {
+                intersectionPoints_CS[0] = MathUtils.Vec3to4(eyePoint_CS, 1);
+                intersectionTangents_CS[0] = MathUtils.Vec3to4(eyeTangent_CS, 1);
+            }
         }
 
         // Render full-screen quad that writes 0x01 to the stencil buffer in the fragments that
@@ -218,22 +230,29 @@ public class PortalCamera : MonoBehaviour {
             0, 0);
     }
 
-    bool GetEyeClipInfo(Camera.StereoscopicEye eye, out Vector3 linePoint_CS, out Vector3 lineTangent_CS, out float eyePortalDistance) {
+    bool GetEyeClipInfo(Camera.StereoscopicEye? eye, out Vector3 linePoint_CS, out Vector3 lineTangent_CS, out float eyePortalDistance) {
         linePoint_CS = new Vector3();
         lineTangent_CS = new Vector3();
         eyePortalDistance = 0.0f;
 
         // The current eye's matrices.
-        Matrix4x4 projectionMatrix = m_MainCamera.GetStereoProjectionMatrix(eye);
+        Matrix4x4 projectionMatrix;
+        Matrix4x4 viewMatrix;
+        if (eye.HasValue) {
+            projectionMatrix = m_MainCamera.GetStereoProjectionMatrix(eye.Value);
+            viewMatrix = m_MainCamera.GetStereoViewMatrix(eye.Value);
+        } else {
+            projectionMatrix = m_MainCamera.projectionMatrix;
+            viewMatrix = m_MainCamera.worldToCameraMatrix;
+        }
         Matrix4x4 gpuProjectionMatrix = GL.GetGPUProjectionMatrix(projectionMatrix, false);
-        Matrix4x4 viewMatrix = m_MainCamera.GetStereoViewMatrix(eye);
 
         // A matrix containing some directions and positions in clip space
         // that will be useful when transformed to view space and scene space.
         // In Unity, clip space always follows OpenGL convention (Z is [-1,1]),
         Matrix4x4 clipPlane_CS = new Matrix4x4(
-            new Vector4(1, 0, 0, 0),  // Right
-            new Vector4(0, 1, 0, 0),  // Up
+            new Vector4(1, 0, 0, 0),  // Right direction
+            new Vector4(0, 1, 0, 0),  // Up direction
             new Vector4(0, 0, -1, 1), // Center position
             new Vector4(1, 1, -1, 1)  // Top-right corner of near clip plane
         );
@@ -262,22 +281,20 @@ public class PortalCamera : MonoBehaviour {
         float clipHeight = clipTopRight_VS.y * 2;
 
         // Calculate portal-space position of eye origin.
+        Vector3 eyePosition_SS = MathUtils.HomogenousToCartesian(viewMatrix.inverse * new Vector4(0, 0, 0, 1));
         Vector3 eyePosition_PS = MathUtils.HomogenousToCartesian(
             portalOpening.worldToLocalMatrix * viewMatrix.inverse * new Vector4(0, 0, 0, 1));
         eyePortalDistance = eyePosition_PS.z;
 
         // If clip plane quad is too far away from portal quad, stop early.
-        //float clipPortalDistance = PortalPointDistance(clipCenter);
-        //float diagClipDist = new Vector2(clipWidth / 2.0f, clipHeight / 2.0f).magnitude;
-        //float maxDist = Mathf.Lerp(clipHeight / 2, diagClipDist, Mathf.Abs(Vector3.Dot(clipRight, portalForward)));
-        //if (clipPortalDistance > maxDist) {
-        //    // TODO: Make this smaller.
-        //    return false;
-        //}
-
-        // TODO: Instead of looking for distance from center of clip plane to portal,
-        //       calculate directly if the pyramid of eye-origin-to-near-clip-plane
-        //       intersects the portal plane at all.
+        // The maximum distance is the distance from the eye's origin to the top-right corner
+        // of the eye's near clip plane.
+        float clipPortalDistance = PortalPointDistance(eyePosition_SS);
+        Vector3 clipTopRight_SS = MathUtils.HomogenousToCartesian(clipPlane_SS.GetColumn(3));
+        float maxDist = Vector3.Distance(eyePosition_SS, clipTopRight_SS);
+        if (clipPortalDistance > maxDist) {
+            return false;
+        }
 
         Matrix4x4 planeBases = new Matrix4x4(
             MathUtils.Vec3to4(clipRight, 1),
@@ -341,34 +358,24 @@ public class PortalCamera : MonoBehaviour {
         return true;
     }
 
-    private float PortalPointDistance(Vector3 center) {
-        // Move sphere to portal coordinate space.
-        Vector3 center_PS = MathUtils.HomogenousToCartesian(
-            m_Portal.StencilMesh.transform.worldToLocalMatrix * MathUtils.Vec3to4(center, 1));
+    private float PortalPointDistance(Vector3 point) {
+        // Move point to the portal's local coordinate space.
+        Vector3 point_PS = MathUtils.HomogenousToCartesian(
+            m_Portal.StencilMesh.transform.worldToLocalMatrix * MathUtils.Vec3to4(point, 1));
 
         // Since portal quad is symmetric on all axes, we can use the point's absolute value to
         // just compare for points that are to the north, east, or northeast of quad.
-        center_PS.x = Mathf.Abs(center_PS.x);
-        center_PS.y = Mathf.Abs(center_PS.y);
-        center_PS.z = Mathf.Abs(center_PS.z);
+        point_PS.x = Mathf.Abs(point_PS.x);
+        point_PS.y = Mathf.Abs(point_PS.y);
+        point_PS.z = Mathf.Abs(point_PS.z);
 
-        float lateralDistance = 0.0f;
+        // Calculate the closest point on the portal quad to the test point.
+        Vector3 closestPoint = point_PS;
+        closestPoint.z = 0;
+        if (closestPoint.x > 0.5f) closestPoint.x = 0.5f;
+        if (closestPoint.y > 0.5f) closestPoint.y = 0.5f;
 
-        // If point is to right of plane, lateral distance is to right edge.
-        if (center_PS.x >= 0.5f && center_PS.y <= 0.5f) {
-            lateralDistance = center_PS.x - 0.5f;
-        }
-
-        // If point is to top of plane, lateral distance is to top edge.
-        else if (center_PS.x <= 0.5f && center_PS.y >= 0.5f) {
-            lateralDistance = center_PS.y - 0.5f;
-        }
-
-        // If point is northeast of plane, use distance to top-right quad corner.
-        else if (center_PS.x >= 0.5f && center_PS.y >= 0.5f) {
-            lateralDistance = new Vector2(center_PS.x - 0.5f, center_PS.y - 0.5f).magnitude;
-        }
-
-        return new Vector2(center_PS.z, lateralDistance).magnitude;
+        // Use the distance from the test point to the closest on-quad point.
+        return Vector3.Distance(point_PS, closestPoint);
     }
 }

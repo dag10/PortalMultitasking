@@ -1,5 +1,10 @@
 ﻿Shader "Portals/PortalStencil"
 {
+	Properties
+	{
+		_OffsetFactor ("Offset Factor", int) = 0
+		_OffsetUnits ("Offset Units", int) = 0
+	}
 	SubShader
 	{
 		// Writes 0x00 in the stencil buffer for the portal opening inside of the virtual scene, since we
@@ -12,8 +17,10 @@
 			}
 
 			ZWrite Off
-			ZTest On
+			ZTest Off
 			ColorMask 0
+
+			Offset [_OffsetFactor], [_OffsetUnits]
 
 			CGPROGRAM
 			#pragma vertex vert
