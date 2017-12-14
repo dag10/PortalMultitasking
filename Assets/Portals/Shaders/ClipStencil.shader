@@ -24,7 +24,6 @@
 			
 			#include "UnityCG.cginc"
 
-			uniform int _TopLeftCornerClipped;
 			uniform fixed4 _IntersectionPoint;
 			uniform fixed4 _IntersectionTangent;
 			uniform float _StereoOffset;
@@ -74,7 +73,7 @@
 
 				clip(C.z);
 
-				return fixed4(0.5, C.z > 0 ? 1 : 0, 0.3, 1);
+				return fixed4(1.0, C.z > 0 ? 1 : 0, 0.3, 1);
 			}
 			ENDCG
 		}

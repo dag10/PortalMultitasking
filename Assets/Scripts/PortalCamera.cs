@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 public class PortalCamera : MonoBehaviour {
+    [SerializeField] private bool m_DrawDebugLines;
     [SerializeField] private Portal m_Portal;
     [SerializeField] private Material m_ClearScreenStencilMaterial;
     [SerializeField] private Material m_SetScreenStencilMaterial;
@@ -154,12 +155,11 @@ public class PortalCamera : MonoBehaviour {
     // Writes 0x01 to the stencil buffer where the near clip plane clips through a portal.
     void StencilPortalClip() {
         // The four clip plane corners in clip space.
-        float nearClipNDC = (SystemInfo.graphicsDeviceType == GraphicsDeviceType.OpenGLCore) ? -1 : 0;
         Matrix4x4 clipCorners_CS = new Matrix4x4(
-            new Vector4(-1, 1, nearClipNDC, 1), // Top left
-            new Vector4(1, 1, nearClipNDC, 1), // Top right
-            new Vector4(-1, -1, nearClipNDC, 1), // Bottom left
-            new Vector4(1, -1, nearClipNDC, 1) // Bottom right
+            new Vector4(-1, 1, -1, 1), // Top left
+            new Vector4(1, 1, -1, 1), // Top right
+            new Vector4(-1, -1, -1, 1), // Bottom left
+            new Vector4(1, -1, -1, 1) // Bottom right
         );
 
         // The four clip plane corners in view space.
@@ -171,11 +171,23 @@ public class PortalCamera : MonoBehaviour {
         // Top-right clip plane corner in scene space in cartesian coordinates.
         Vector3 clipSpaceCorner = MathUtils.HomogenousToCartesian(clipCorners_VS.GetColumn(1));
 
+        // Transform the four clip plane corners into portal space to see which corners are behind the portal.
+        Matrix4x4 clipCorners_PS = m_Portal.StencilMesh.transform.worldToLocalMatrix * clipCorners_SS;
+
+        // Determine if all four corners of the near clip plane are behind the portal.
+        bool entireClipPlaneIsBehind = true;
+        for (int i = 0; i < 4; i++) {
+            if (clipCorners_PS.GetColumn(i).z < 0) {
+                entireClipPlaneIsBehind = false;
+            }
+        }
+
         // Definition of portal plane.
-        Vector3 portalRight = m_Portal.transform.TransformDirection(Vector3.right);
-        Vector3 portalUp = m_Portal.transform.TransformDirection(Vector3.up);
-        Vector3 portalForward = m_Portal.transform.TransformDirection(Vector3.forward);
-        Vector3 portalCenter = m_Portal.transform.position;
+        Transform portalOpening = m_Portal.StencilMesh.transform;
+        Vector3 portalRight = portalOpening.TransformDirection(Vector3.right);
+        Vector3 portalUp = portalOpening.TransformDirection(Vector3.up);
+        Vector3 portalForward = portalOpening.TransformDirection(Vector3.forward);
+        Vector3 portalCenter = portalOpening.position;
 
         // Definition of main camera's near clip plane.
         Vector3 clipRight = m_MainCamera.transform.TransformDirection(Vector3.right);
@@ -184,11 +196,6 @@ public class PortalCamera : MonoBehaviour {
         Vector3 clipCenter = m_MainCamera.transform.position + (clipForward * m_MainCamera.nearClipPlane);
         float clipWidth = clipSpaceCorner.x * 2;
         float clipHeight = clipSpaceCorner.y * 2;
-
-        // If planes are parallel, there's definitely no partial clipping, so stop early.
-        if (portalForward == clipForward || portalForward == -clipForward) {
-            return;
-        }
 
         // If clip plane quad is too far away from portal quad, stop early.
         float clipPortalDistance = PortalPointDistance(clipCenter);
@@ -215,6 +222,42 @@ public class PortalCamera : MonoBehaviour {
         // Determine the intersection line's tangent, which will be parallel to both the portal and clip planes' normals.
         Vector3 lineTangent = Vector3.Cross(portalForward, clipForward);
 
+        if (m_DrawDebugLines) {
+            // Draw clip plane rect in editor for debugging purposes.
+            Debug.DrawLine( // Top
+                clipCenter - (clipRight * clipWidth / 2.0f) + (clipUp * clipHeight / 2.0f),
+                clipCenter + (clipRight * clipWidth / 2.0f) + (clipUp * clipHeight / 2.0f),
+                Color.white,
+                0,
+                true);
+            Debug.DrawLine( // Bottom
+                clipCenter - (clipRight * clipWidth / 2.0f) - (clipUp * clipHeight / 2.0f),
+                clipCenter + (clipRight * clipWidth / 2.0f) - (clipUp * clipHeight / 2.0f),
+                Color.white,
+                0,
+                true);
+            Debug.DrawLine( // Left
+                clipCenter - (clipRight * clipWidth / 2.0f) + (clipUp * clipHeight / 2.0f),
+                clipCenter - (clipRight * clipWidth / 2.0f) - (clipUp * clipHeight / 2.0f),
+                Color.white,
+                0,
+                true);
+            Debug.DrawLine( // Right
+                clipCenter + (clipRight * clipWidth / 2.0f) + (clipUp * clipHeight / 2.0f),
+                clipCenter + (clipRight * clipWidth / 2.0f) - (clipUp * clipHeight / 2.0f),
+                Color.white,
+                0,
+                true);
+
+            // Draw intersection line in editor for debugging purposes.
+            Debug.DrawLine(
+                linePoint - (lineTangent * 100.0f),
+                linePoint + (lineTangent * 100.0f),
+                Color.cyan,
+                0,
+                false);
+        }
+
         // Transform intersection line to clip space.
         Vector3 linePoint_CS = MathUtils.HomogenousToCartesian(
             m_MainCamera.projectionMatrix * m_MainCamera.worldToCameraMatrix * MathUtils.Vec3to4(linePoint, 1));
@@ -229,34 +272,33 @@ public class PortalCamera : MonoBehaviour {
         shiftDirection_CS.y *= m_MainCamera.aspect;
         linePoint_CS += shiftDirection_CS * 0.05f;
 
-        // Calculate the positions along the four edges of the near clip plane that the portal plane intersects.
-        float leftY = linePoint_CS.y - ((lineTangent_CS.y / lineTangent_CS.x) * (linePoint_CS.x + 1.0f));
-        float rightY = linePoint_CS.y - ((lineTangent_CS.y / lineTangent_CS.x) * (linePoint_CS.x - 1.0f));
-        float bottomX = linePoint_CS.x - ((lineTangent_CS.x / lineTangent_CS.y) * (linePoint_CS.y + 1.0f));
-        float topX = linePoint_CS.x - ((lineTangent_CS.x / lineTangent_CS.y) * (linePoint_CS.y - 1.0f));
-
-        // Determine if the clip intersection is in screen space at all, and return if not.
-        if ((bottomX < -1 || bottomX > 1) && (topX < -1 || topX > 1) &&
-            (leftY < -1 || leftY > 1) && (rightY < -1 || rightY > 1)) {
-            return;
-        }
-
-        // Transform the four clip plane corners into portal space to see which corners are behind the portal.
-        Matrix4x4 clipCorners_PS = m_Portal.StencilMesh.transform.worldToLocalMatrix * clipCorners_SS;
-
-        // Determine if the top-left corner of screen space is behind the portal (clipping) or not.
-        // We'll give this bool to the shader to determine its parity for each pixel when deciding whether
-        // to write to the stencil buffer.
-        bool topLeftIsBehind = (clipCorners_PS.GetColumn(0).z > 0);
-
         // Calculate stereoscopic horizontal offset for the clip line for each eye.
+        float stereoOffset = 0;
         if (m_MainCamera.stereoEnabled) {
             Vector4 rightEye_SS = MathUtils.Vec3to4(clipCenter + (clipRight * m_MainCamera.stereoSeparation / 2.0f), 1.0f);
             Vector4 rightEye_CS = m_MainCamera.projectionMatrix * m_MainCamera.worldToCameraMatrix * rightEye_SS;
-            m_ClipStencilMaterial.SetFloat("_StereoOffset", MathUtils.HomogenousToCartesian(rightEye_CS).x);
+            stereoOffset = MathUtils.HomogenousToCartesian(rightEye_CS).x;
         }
 
-        m_ClipStencilMaterial.SetInt("_TopLeftCornerClipped", topLeftIsBehind ? 1 : 0);
+        // If we're not fully behind the clip plane, determine if the clip intersection is in screen space
+        // at all, and return if not.
+        if (!entireClipPlaneIsBehind) {
+            // The positions along the four edges of the near clip plane that the portal plane intersects.
+            float leftY = linePoint_CS.y - ((lineTangent_CS.y / lineTangent_CS.x) * (linePoint_CS.x + 1.0f));
+            float rightY = linePoint_CS.y - ((lineTangent_CS.y / lineTangent_CS.x) * (linePoint_CS.x - 1.0f));
+            float bottomX = linePoint_CS.x - ((lineTangent_CS.x / lineTangent_CS.y) * (linePoint_CS.y + 1.0f));
+            float topX = linePoint_CS.x - ((lineTangent_CS.x / lineTangent_CS.y) * (linePoint_CS.y - 1.0f));
+
+            float clipExtent = 1 + stereoOffset;
+            if ((bottomX < -clipExtent || bottomX > clipExtent) && (topX < -clipExtent || topX > clipExtent) &&
+                (leftY < -clipExtent || leftY > clipExtent) && (rightY < -clipExtent || rightY > clipExtent)) {
+                return;
+            }
+        }
+
+        // Render full-screen quad that writes 0x01 to the stencil buffer in the fragments that
+        // line in the region clipping the portal plane.
+        m_ClipStencilMaterial.SetFloat("_StereoOffset", stereoOffset);
         m_ClipStencilMaterial.SetVector("_IntersectionPoint", MathUtils.Vec3to4(linePoint_CS, 1));
         m_ClipStencilMaterial.SetVector("_IntersectionTangent", MathUtils.Vec3to4(lineTangent_CS, 1));
         commandBuffer.DrawMesh(
