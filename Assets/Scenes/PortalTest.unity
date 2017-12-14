@@ -531,6 +531,15 @@ Prefab:
       propertyPath: m_Depth
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1425448765652052, guid: 3c56f3e60df694aca920e357f11eda12, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 20144178896335984, guid: 3c56f3e60df694aca920e357f11eda12,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3c56f3e60df694aca920e357f11eda12, type: 2}
   m_IsPrefabParent: 0
@@ -622,26 +631,10 @@ Prefab:
       propertyPath: m_StencilOverride
       value: 
       objectReference: {fileID: 1671728140}
-    - target: {fileID: 114380130177761504, guid: 3c56f3e60df694aca920e357f11eda12,
-        type: 2}
-      propertyPath: m_ClearScreenStencilMaterial
-      value: 
-      objectReference: {fileID: 2100000, guid: ae6cfb87c244d402dbc33bec97f0d0b0, type: 2}
-    - target: {fileID: 114380130177761504, guid: 3c56f3e60df694aca920e357f11eda12,
-        type: 2}
-      propertyPath: m_SetScreenStencilMaterial
-      value: 
-      objectReference: {fileID: 2100000, guid: 801b7c44cec0243d6b27f36820ff1821, type: 2}
-    - target: {fileID: 114380130177761504, guid: 3c56f3e60df694aca920e357f11eda12,
-        type: 2}
-      propertyPath: m_ClearDepthWhereStencilMaterial
-      value: 
-      objectReference: {fileID: 2100000, guid: 1220bf0ecb7264166998978db2fac43e, type: 2}
-    - target: {fileID: 114380130177761504, guid: 3c56f3e60df694aca920e357f11eda12,
-        type: 2}
-      propertyPath: m_PortalStencilMaterial
-      value: 
-      objectReference: {fileID: 2100000, guid: 0d7be2a9cafe24d988680b8ffd39a4a8, type: 2}
+    - target: {fileID: 4641878772542148, guid: 3c56f3e60df694aca920e357f11eda12, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -0.0005
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3c56f3e60df694aca920e357f11eda12, type: 2}
   m_IsPrefabParent: 0
@@ -679,7 +672,7 @@ Light:
     m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.71
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -803,13 +796,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1533061095}
-  m_LocalRotation: {x: 0.07556272, y: -0.5109509, z: 0.04515173, w: 0.8550911}
-  m_LocalPosition: {x: 2.2, y: 0.85, z: -1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.85, z: 0.954}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 90122934}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 10.1, y: -61.72, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1550719331
 GameObject:
   m_ObjectHideFlags: 0
