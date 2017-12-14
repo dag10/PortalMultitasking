@@ -79,6 +79,7 @@ namespace Valve.VR.InteractionSystem
 			{
 				GameObject newObject = new GameObject( "LineRenderer_" + i );
 				newObject.transform.SetParent( arcObjectsTransfrom );
+                newObject.layer = this.gameObject.layer;
 
 				lineRenderers[i] = newObject.AddComponent<LineRenderer>();
 
