@@ -50,6 +50,11 @@ public class PortalCamera : MonoBehaviour {
         // throughout the whole screen. We disable it for this camera's render because we only want to render
         // fragments that are visible through the portal.
         m_Portal.StencilOverride.SetActive(false);
+
+        // Disable buggy frustum culling until I can figure out how to fix it.
+        m_PortalCamera.cullingMatrix = Matrix4x4.Ortho(-99999, 99999, -99999, 99999, 0.001f, 99999) *
+                             Matrix4x4.Translate(Vector3.forward * -99999 / 2f) *
+                             m_PortalCamera.worldToCameraMatrix;
     }
 
     public void OnPreRender() {
