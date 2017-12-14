@@ -17,7 +17,7 @@
 
 			ZWrite Off
 			ColorMask 0
-			Cull Off
+			Cull Back
 
 			Offset [_OffsetFactor], [_OffsetUnits]
 
@@ -41,12 +41,6 @@
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
-
-				// I'm not sure why I have to do this, but the near depth or near and far clip planes seem
-				// to be incorrect when rendering this shader using CommandBuffer.DrawMesh() versus the
-				// material just being natively in the scene.
-				o.vertex.z *= 0.5;
-
 				return o;
 			}
 			

@@ -16,6 +16,7 @@
 		Stencil {
 			Ref 1
 			Comp Equal
+			Pass Keep
 		}
 		
 		CGPROGRAM
@@ -36,6 +37,7 @@
 		half _Metallic;
 		fixed4 _Color;
 		fixed4x4 _InvPortal;
+		fixed _EyePortalDistances[2];
 
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -47,9 +49,9 @@
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			// If rendering through a portal, discard fragments between the back of the portal and the camera.
-			if (_InvPortal[3][3] != 0) {
+			if (_InvPortal[3][3] != 0 && _EyePortalDistances[unity_StereoEyeIndex] < 0) {
 				fixed4 portalPos = mul(_InvPortal, fixed4(IN.worldPos, 1));
-				clip(-portalPos.z + 0.01);
+				clip(-portalPos.z + 0.001);
 			}
 
 			// Albedo comes from a texture tinted by color
