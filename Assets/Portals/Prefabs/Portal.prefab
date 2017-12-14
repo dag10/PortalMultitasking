@@ -103,7 +103,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1171471944890494}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.0005}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.95, y: 0.95, z: 1}
   m_Children: []
   m_Father: {fileID: 4931450500437986}
@@ -123,7 +123,7 @@ Transform:
   - {fileID: 4931450500437986}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!4 &4931450500437986
 Transform:
   m_ObjectHideFlags: 1
@@ -131,7 +131,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1147874750887442}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.001}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1.2, z: 1}
   m_Children:
   - {fileID: 4641878772542148}
@@ -305,12 +305,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a5b7a3360e0a41bc8141c0fa4355b10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_DrawDebugLines: 0
   m_Portal: {fileID: 114614540324454208}
   m_ClearScreenStencilMaterial: {fileID: 2100000, guid: ae6cfb87c244d402dbc33bec97f0d0b0,
     type: 2}
   m_SetScreenStencilMaterial: {fileID: 2100000, guid: 801b7c44cec0243d6b27f36820ff1821,
     type: 2}
   m_PortalStencilMaterial: {fileID: 2100000, guid: 0d7be2a9cafe24d988680b8ffd39a4a8,
+    type: 2}
+  m_VirtualPortalStencilMaterial: {fileID: 2100000, guid: 83c48372f15122e4f859141856016e61,
     type: 2}
   m_ClipStencilMaterial: {fileID: 2100000, guid: 49c128833e7a8441b984fb21bbbba08a,
     type: 2}

@@ -518,10 +518,16 @@ Prefab:
       propertyPath: m_Name
       value: Blue Portal
       objectReference: {fileID: 0}
-    - target: {fileID: 4907824876530382, guid: 3c56f3e60df694aca920e357f11eda12, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -90
-      objectReference: {fileID: 0}
+    - target: {fileID: 114614540324454208, guid: 3c56f3e60df694aca920e357f11eda12,
+        type: 2}
+      propertyPath: m_LinkedPortal
+      value: 
+      objectReference: {fileID: 1522542163}
+    - target: {fileID: 114614540324454208, guid: 3c56f3e60df694aca920e357f11eda12,
+        type: 2}
+      propertyPath: m_StencilOverride
+      value: 
+      objectReference: {fileID: 1671728140}
     - target: {fileID: 114614540324454208, guid: 3c56f3e60df694aca920e357f11eda12,
         type: 2}
       propertyPath: m_Color.r
@@ -534,32 +540,8 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114614540324454208, guid: 3c56f3e60df694aca920e357f11eda12,
         type: 2}
-      propertyPath: m_LinkedPortal
-      value: 
-      objectReference: {fileID: 1522542163}
-    - target: {fileID: 114614540324454208, guid: 3c56f3e60df694aca920e357f11eda12,
-        type: 2}
-      propertyPath: m_StencilOverride
-      value: 
-      objectReference: {fileID: 1671728140}
-    - target: {fileID: 20144178896335984, guid: 3c56f3e60df694aca920e357f11eda12,
-        type: 2}
-      propertyPath: m_Depth
+      propertyPath: m_Color.g
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1425448765652052, guid: 3c56f3e60df694aca920e357f11eda12, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 20144178896335984, guid: 3c56f3e60df694aca920e357f11eda12,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 20144178896335984, guid: 3c56f3e60df694aca920e357f11eda12,
-        type: 2}
-      propertyPath: near clip plane
-      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3c56f3e60df694aca920e357f11eda12, type: 2}
@@ -795,7 +777,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967039
+    m_Bits: 4294967295
   m_RenderingPath: 1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

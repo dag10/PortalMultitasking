@@ -56,9 +56,7 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				float2 pos = i.clipSpacePos;
-#if defined(SHADER_API_D3D9) | defined(SHADER_API_D3D11)
-				pos.y *= -1;
-#endif
+				pos.y *= _ProjectionParams.x; // If on DirectX, flip Y coordinates.
 				float2 linePoint = _IntersectionPoint.xy;
 				float2 lineTangent = _IntersectionTangent.xy;
 

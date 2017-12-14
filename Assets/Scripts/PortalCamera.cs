@@ -9,6 +9,7 @@ public class PortalCamera : MonoBehaviour {
     [SerializeField] private Material m_ClearScreenStencilMaterial;
     [SerializeField] private Material m_SetScreenStencilMaterial;
     [SerializeField] private Material m_PortalStencilMaterial;
+    [SerializeField] private Material m_VirtualPortalStencilMaterial;
     [SerializeField] private Material m_ClipStencilMaterial;
     [SerializeField] private Material m_ClearDepthWhereStencilMaterial;
 
@@ -86,6 +87,11 @@ public class PortalCamera : MonoBehaviour {
         // portal surface.
         StencilPortalClip();
 
+        // Clear the stencil buffer for portal opening on the other side of the portal, in the virtual
+        // scene. This prevent us from seeing the wall when we're looking backwards through a portal but
+        // haven't yet teleported through the portal.
+        UnstencilVirtualPortal();
+
         // Clear the depth buffer only under the portal so as to preserve the final depth buffer.
         ClearDepthUnderStencil();
 
@@ -144,10 +150,22 @@ public class PortalCamera : MonoBehaviour {
         // Finally, the last term is the quad's model matrix, which is its modelspace-to-scenespace transform.
         Matrix4x4 modelMatrix = xfPortalCamera * xfMainCamera.inverse * m_Portal.StencilMesh.transform.localToWorldMatrix;
 
+        // Move portal outward a small amount to fix z-fighting.
+        modelMatrix = modelMatrix * Matrix4x4.Translate(new Vector3(0, 0, -0.001f));
+
         commandBuffer.DrawMesh(
             m_Portal.StencilMesh.mesh,
             modelMatrix,
             m_PortalStencilMaterial,
+            0,
+            0);
+    }
+
+    void UnstencilVirtualPortal() {
+        commandBuffer.DrawMesh(
+            m_Portal.LinkedPortal.StencilMesh.mesh,
+            m_Portal.LinkedPortal.StencilMesh.transform.localToWorldMatrix,
+            m_VirtualPortalStencilMaterial,
             0,
             0);
     }
@@ -297,7 +315,7 @@ public class PortalCamera : MonoBehaviour {
         }
 
         // Render full-screen quad that writes 0x01 to the stencil buffer in the fragments that
-        // line in the region clipping the portal plane.
+        // lie in the region clipping the portal plane.
         m_ClipStencilMaterial.SetFloat("_StereoOffset", stereoOffset);
         m_ClipStencilMaterial.SetVector("_IntersectionPoint", MathUtils.Vec3to4(linePoint_CS, 1));
         m_ClipStencilMaterial.SetVector("_IntersectionTangent", MathUtils.Vec3to4(lineTangent_CS, 1));
