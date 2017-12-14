@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 33825776381583046}
   - component: {fileID: 64617386527909102}
   - component: {fileID: 23174281590478372}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Opening
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 0d7be2a9cafe24d988680b8ffd39a4a8, type: 2}
+  - {fileID: 2100000, guid: 52c3e714355dd44fa983443732569c04, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -223,3 +223,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 0, b: 0, a: 0}
   m_BackQuad: {fileID: 23967335995924714}
+  m_StencilMesh: {fileID: 33825776381583046}

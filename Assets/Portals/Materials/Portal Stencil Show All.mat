@@ -6,15 +6,18 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Portal Opening
+  m_Name: Portal Stencil Show All
   m_Shader: {fileID: 4800000, guid: 6a975232de99a447f871d40f108d0cea, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 0
   stringTagMap: {}
-  disabledShaderPasses: []
+  disabledShaderPasses:
+  - 0
+  - 2
+  - 3
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
