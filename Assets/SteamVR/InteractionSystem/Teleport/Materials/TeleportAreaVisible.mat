@@ -12,10 +12,9 @@ Material:
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap:
     OriginalShader: Standard
-    RenderType: Transparent
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -80,13 +79,15 @@ Material:
     - _BumpScale: 1
     - _ColorMask: 15
     - _Cutoff: 0.5
-    - _Darken: 0.641
+    - _Darken: 0
     - _DetailNormalMapScale: 1
     - _DstBlend: 10
     - _Emission: 0.01
     - _EmissionScaleUI: 0
     - _FogMultiplier: 1
+    - _GlossMapScale: 1
     - _Glossiness: 0
+    - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 3
     - _OcclusionStrength: 1
@@ -95,7 +96,9 @@ Material:
     - _OcclusionStrengthIndirectDiffuse: 1
     - _OcclusionStrengthIndirectSpecular: 1
     - _Parallax: 0.02
-    - _SeeThru: 0.358
+    - _SeeThru: 0
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
     - _SpecularMode: 2
     - _SrcBlend: 1
     - _Stencil: 0

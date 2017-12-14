@@ -321,11 +321,11 @@ GameObject:
   - component: {fileID: 135944743}
   - component: {fileID: 135944742}
   m_Layer: 8
-  m_Name: TeleportArea
+  m_Name: Teleport Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!114 &135944742
 MonoBehaviour:
@@ -848,10 +848,10 @@ Light:
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 0.71
+    m_Strength: 0.462
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -1187,7 +1187,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1751955602
 Transform:
   m_ObjectHideFlags: 0
