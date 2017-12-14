@@ -59,13 +59,17 @@ public class PortalCamera : MonoBehaviour {
         m_PortalCamera.nearClipPlane = m_MainCamera.nearClipPlane;
         m_PortalCamera.farClipPlane = m_MainCamera.farClipPlane;
         m_PortalCamera.stereoTargetEye = m_MainCamera.stereoTargetEye;
-        //m_PortalCamera.fieldOfView = m_MainCamera.fieldOfView;
 
         // Only render this portal if we're either a home portal and currently in the home, or if we're the
         // app portal and we're in the app.
+        float playerDistance = (m_MainCamera.transform.position - m_Portal.transform.position).magnitude;
+        float otherPortalPlayerDistance = (m_MainCamera.transform.position - m_Portal.LinkedPortal.transform.position).magnitude;
+        Vector3 playerPosition_PS = m_Portal.StencilMesh.transform.InverseTransformPoint(m_MainCamera.transform.position);
         m_PortalCamera.enabled =
-            (m_Portal.m_PortalType == Portal.PortalType.Home && PortalManager.Instance.PlayerIsHome) ||
-            (m_Portal.m_PortalType == Portal.PortalType.App && PortalManager.Instance.CurrentAppPortal == m_Portal);
+            (playerPosition_PS.z < 0 && (
+                (m_Portal.m_PortalType == Portal.PortalType.Home && PortalManager.Instance.PlayerIsHome) ||
+                (m_Portal.m_PortalType == Portal.PortalType.App && PortalManager.Instance.CurrentAppPortal == m_Portal))) ||
+                (playerDistance < 3 || otherPortalPlayerDistance < 3);
     }
 
     public void OnPreCull() {

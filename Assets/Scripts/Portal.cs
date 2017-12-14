@@ -14,7 +14,7 @@ public class Portal : MonoBehaviour {
     [SerializeField] private GameObject m_StencilOverride;
     [SerializeField] private float m_RotationSpeed = 3.8f;
 
-     public PortalType m_PortalType;
+    [HideInInspector] public PortalType m_PortalType;
 
     private const Hand.AttachmentFlags m_AttachmentFlags = Hand.defaultAttachmentFlags & (~Hand.AttachmentFlags.SnapOnAttach) & (~Hand.AttachmentFlags.ParentToHand);
     private Vector3 m_InitialPortalPosition;

@@ -20,9 +20,11 @@ public class PortalManager : MonoBehaviour {
     private Camera m_MainCamera;
     private Vector3? m_OldCameraPosition;
     private AppPortals? m_CurrentApp;
+    private AppPortals? m_NextFrameCurrentApp;
 
     public bool PlayerIsHome { get { return !m_CurrentApp.HasValue; } }
     public Portal CurrentAppPortal { get { return m_CurrentApp.HasValue ? m_CurrentApp.Value._AppPortal : null; } }
+    public Portal CurrentHomePortal { get { return m_CurrentApp.HasValue ? m_CurrentApp.Value._HomePortal : null; } }
     public VirtualApp CurrentApp { get { return m_CurrentApp.HasValue ? m_CurrentApp.Value._App : null; } }
 
     void Awake() {
@@ -43,6 +45,10 @@ public class PortalManager : MonoBehaviour {
         }
     }
 
+    void Update() {
+        m_CurrentApp = m_NextFrameCurrentApp;
+    }
+
     public void LateUpdate() {
         foreach (var cam in GameObject.FindGameObjectsWithTag("MainCamera")) {
             if (cam.activeInHierarchy) {
@@ -61,13 +67,13 @@ public class PortalManager : MonoBehaviour {
                 foreach (var app in m_Apps) {
                     if (DidCameraMoveThroughPortal(app._HomePortal)) {
                         TeleportThroughPortal(app._HomePortal);
-                        m_CurrentApp = app;
+                        m_NextFrameCurrentApp = app;
                         break;
                     }
                 }
             } else if (DidCameraMoveThroughPortal(m_CurrentApp.Value._AppPortal)) {
                 TeleportThroughPortal(m_CurrentApp.Value._AppPortal);
-                m_CurrentApp = null;
+                m_NextFrameCurrentApp = null;
             }
         }
 
