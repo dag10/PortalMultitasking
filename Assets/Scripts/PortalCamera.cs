@@ -210,40 +210,6 @@ public class PortalCamera : MonoBehaviour {
         // Determine the intersection line's tangent, which will be parallel to both the portal and clip planes' normals.
         Vector3 lineTangent = Vector3.Cross(portalForward, clipForward);
 
-        // Draw clip plane rect.
-        Debug.DrawLine( // Top
-            clipCenter - (clipRight * clipWidth / 2.0f) + (clipUp * clipHeight / 2.0f),
-            clipCenter + (clipRight * clipWidth / 2.0f) + (clipUp * clipHeight / 2.0f),
-            Color.white,
-            0,
-            true);
-        Debug.DrawLine( // Bottom
-            clipCenter - (clipRight * clipWidth / 2.0f) - (clipUp * clipHeight / 2.0f),
-            clipCenter + (clipRight * clipWidth / 2.0f) - (clipUp * clipHeight / 2.0f),
-            Color.white,
-            0,
-            true);
-        Debug.DrawLine( // Left
-            clipCenter - (clipRight * clipWidth / 2.0f) + (clipUp * clipHeight / 2.0f),
-            clipCenter - (clipRight * clipWidth / 2.0f) - (clipUp * clipHeight / 2.0f),
-            Color.white,
-            0,
-            true);
-        Debug.DrawLine( // Right
-            clipCenter + (clipRight * clipWidth / 2.0f) + (clipUp * clipHeight / 2.0f),
-            clipCenter + (clipRight * clipWidth / 2.0f) - (clipUp * clipHeight / 2.0f),
-            Color.white,
-            0,
-            true);
-
-        // Draw intersection line.
-        Debug.DrawLine(
-            linePoint - (lineTangent * 100.0f),
-            linePoint + (lineTangent * 100.0f),
-            Color.cyan,
-            0,
-            false);
-
         // Transform intersection line to clip space.
         Vector3 linePoint_CS = MathUtils.HomogenousToCartesian(
             m_MainCamera.projectionMatrix * m_MainCamera.worldToCameraMatrix * MathUtils.Vec3to4(linePoint, 1));
