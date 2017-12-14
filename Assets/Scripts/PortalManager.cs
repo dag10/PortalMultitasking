@@ -5,13 +5,13 @@ using Valve.VR.InteractionSystem;
 
 public class PortalManager : MonoBehaviour {
     [System.Serializable]
-    public struct VirtualApp {
-        public string _Name;
+    public struct AppPortals {
+        public VirtualApp _App;
         public Portal _AppPortal;
         public Portal _HomePortal;
     }
 
-    [SerializeField] private VirtualApp[] m_Apps;
+    [SerializeField] private AppPortals[] m_Apps;
     [SerializeField] private Player m_Player;
 
     private static PortalManager s_Instance;
@@ -19,10 +19,11 @@ public class PortalManager : MonoBehaviour {
 
     private Camera m_MainCamera;
     private Vector3? m_OldCameraPosition;
-    private VirtualApp? m_CurrentApp;
+    private AppPortals? m_CurrentApp;
 
     public bool PlayerIsHome { get { return !m_CurrentApp.HasValue; } }
     public Portal CurrentAppPortal { get { return m_CurrentApp.HasValue ? m_CurrentApp.Value._AppPortal : null; } }
+    public VirtualApp CurrentApp { get { return m_CurrentApp.HasValue ? m_CurrentApp.Value._App : null; } }
 
     void Awake() {
         m_CurrentApp = null;
