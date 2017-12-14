@@ -283,7 +283,7 @@ GameObject:
   m_Component:
   - component: {fileID: 90122934}
   m_Layer: 0
-  m_Name: Cameras
+  m_Name: Camera Setup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -301,8 +301,6 @@ Transform:
   m_Children:
   - {fileID: 1671728141}
   - {fileID: 1533061100}
-  - {fileID: 162872589}
-  - {fileID: 808972119}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -340,112 +338,6 @@ Transform:
   m_Father: {fileID: 310242706}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &162872588
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 162872589}
-  - component: {fileID: 162872593}
-  - component: {fileID: 162872592}
-  - component: {fileID: 162872591}
-  - component: {fileID: 162872590}
-  - component: {fileID: 162872594}
-  m_Layer: 0
-  m_Name: Red->Blue Portal Camera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &162872589
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 162872588}
-  m_LocalRotation: {x: -0.44381285, y: -0.5299253, z: -0.38430718, w: 0.6119783}
-  m_LocalPosition: {x: 2.21, y: -0.89, z: 0.13}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 90122934}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: -71.9, y: -81.78, z: 0}
---- !u!81 &162872590
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 162872588}
-  m_Enabled: 0
---- !u!92 &162872591
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 162872588}
-  m_Enabled: 0
---- !u!124 &162872592
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 162872588}
-  m_Enabled: 0
---- !u!20 &162872593
-Camera:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 162872588}
-  m_Enabled: 0
-  serializedVersion: 2
-  m_ClearFlags: 4
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 0
-  orthographic size: 5
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967039
-  m_RenderingPath: 1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
-  m_StereoMirrorMode: 0
---- !u!114 &162872594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 162872588}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a5b7a3360e0a41bc8141c0fa4355b10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MainCamera: {fileID: 1533061099}
-  inPortal: {fileID: 1522542163}
-  outPortal: {fileID: 346224525}
-  m_StencilMaterial: {fileID: 2100000, guid: 0d7be2a9cafe24d988680b8ffd39a4a8, type: 2}
-  m_StencilOverride: {fileID: 1671728140}
 --- !u!1 &310242705
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,7 +367,7 @@ Transform:
   - {fileID: 125599636}
   - {fileID: 1751955602}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &346224525 stripped
 MonoBehaviour:
@@ -567,112 +459,6 @@ Transform:
   m_Father: {fileID: 125599636}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!1 &808972118
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 808972119}
-  - component: {fileID: 808972124}
-  - component: {fileID: 808972123}
-  - component: {fileID: 808972122}
-  - component: {fileID: 808972121}
-  - component: {fileID: 808972120}
-  m_Layer: 0
-  m_Name: Blue->Red Portal Camera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &808972119
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 808972118}
-  m_LocalRotation: {x: -0.44381285, y: -0.5299253, z: -0.38430718, w: 0.6119783}
-  m_LocalPosition: {x: 2.21, y: -0.89, z: 0.13}
-  m_LocalScale: {x: 1.0000002, y: 1.0000002, z: 1.0000005}
-  m_Children: []
-  m_Father: {fileID: 90122934}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: -71.9, y: -81.78, z: 0}
---- !u!114 &808972120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 808972118}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a5b7a3360e0a41bc8141c0fa4355b10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MainCamera: {fileID: 1533061099}
-  inPortal: {fileID: 346224525}
-  outPortal: {fileID: 1522542163}
-  m_StencilMaterial: {fileID: 2100000, guid: 0d7be2a9cafe24d988680b8ffd39a4a8, type: 2}
-  m_StencilOverride: {fileID: 1671728140}
---- !u!81 &808972121
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 808972118}
-  m_Enabled: 0
---- !u!92 &808972122
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 808972118}
-  m_Enabled: 0
---- !u!124 &808972123
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 808972118}
-  m_Enabled: 0
---- !u!20 &808972124
-Camera:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 808972118}
-  m_Enabled: 0
-  serializedVersion: 2
-  m_ClearFlags: 4
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 0
-  orthographic size: 5
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967039
-  m_RenderingPath: 1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
-  m_StereoMirrorMode: 0
 --- !u!1001 &1027777592
 Prefab:
   m_ObjectHideFlags: 0
@@ -730,6 +516,21 @@ Prefab:
       propertyPath: m_Color.b
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114614540324454208, guid: 3c56f3e60df694aca920e357f11eda12,
+        type: 2}
+      propertyPath: m_LinkedPortal
+      value: 
+      objectReference: {fileID: 1522542163}
+    - target: {fileID: 114614540324454208, guid: 3c56f3e60df694aca920e357f11eda12,
+        type: 2}
+      propertyPath: m_StencilOverride
+      value: 
+      objectReference: {fileID: 1671728140}
+    - target: {fileID: 20144178896335984, guid: 3c56f3e60df694aca920e357f11eda12,
+        type: 2}
+      propertyPath: m_Depth
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3c56f3e60df694aca920e357f11eda12, type: 2}
   m_IsPrefabParent: 0
@@ -766,7 +567,7 @@ Transform:
   - {fileID: 1516115827}
   - {fileID: 1027777593}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1234323762
 Prefab:
@@ -811,6 +612,16 @@ Prefab:
       propertyPath: m_Name
       value: Red Portal
       objectReference: {fileID: 0}
+    - target: {fileID: 114614540324454208, guid: 3c56f3e60df694aca920e357f11eda12,
+        type: 2}
+      propertyPath: m_LinkedPortal
+      value: 
+      objectReference: {fileID: 346224525}
+    - target: {fileID: 114614540324454208, guid: 3c56f3e60df694aca920e357f11eda12,
+        type: 2}
+      propertyPath: m_StencilOverride
+      value: 
+      objectReference: {fileID: 1671728140}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3c56f3e60df694aca920e357f11eda12, type: 2}
   m_IsPrefabParent: 0
