@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 33825776381583046}
   - component: {fileID: 64617386527909102}
   - component: {fileID: 23174281590478372}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Opening
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1171471944890494}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.001}
   m_LocalScale: {x: 0.95, y: 0.95, z: 1}
   m_Children: []
   m_Father: {fileID: 4931450500437986}
@@ -131,7 +131,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1147874750887442}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.001}
   m_LocalScale: {x: 1, y: 1.2, z: 1}
   m_Children:
   - {fileID: 4641878772542148}
@@ -319,6 +319,7 @@ MonoBehaviour:
     type: 2}
   m_ClearDepthWhereStencilMaterial: {fileID: 2100000, guid: 1220bf0ecb7264166998978db2fac43e,
     type: 2}
+  TMP_SEP_DIV: 2
 --- !u!114 &114614540324454208
 MonoBehaviour:
   m_ObjectHideFlags: 1
