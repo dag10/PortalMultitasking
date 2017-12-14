@@ -4,11 +4,37 @@ using UnityEngine;
 using Valve.VR.InteractionSystem;
 
 public class PortalManager : MonoBehaviour {
-    [SerializeField] private Portal[] m_Portals;
+    [System.Serializable]
+    public struct VirtualApp {
+        public string _Name;
+        public Portal _AppPortal;
+        public Portal _HomePortal;
+    }
+
+    [SerializeField] private VirtualApp[] m_Apps;
     [SerializeField] private Player m_Player;
+
+    private static PortalManager s_Instance;
+    public static PortalManager Instance { get { return s_Instance; } }
 
     private Camera m_MainCamera;
     private Vector3? m_OldCameraPosition;
+    private VirtualApp? m_CurrentApp;
+
+    public bool PlayerIsHome { get { return !m_CurrentApp.HasValue; } }
+    public Portal CurrentAppPortal { get { return m_CurrentApp.HasValue ? m_CurrentApp.Value._AppPortal : null; } }
+
+    void Awake() {
+        m_CurrentApp = null;
+        s_Instance = this;
+    }
+
+    void Start() {
+        foreach (var app in m_Apps) {
+            app._HomePortal.m_PortalType = Portal.PortalType.Home;
+            app._AppPortal.m_PortalType = Portal.PortalType.App;
+        }
+    }
 
     public void LateUpdate() {
         foreach (var cam in GameObject.FindGameObjectsWithTag("MainCamera")) {
@@ -23,10 +49,18 @@ public class PortalManager : MonoBehaviour {
             return;
         }
 
-        foreach (var portal in m_Portals) {
-            if (!IsHoldingAPortal() && DidCameraMoveThroughPortal(portal)) {
-                TeleportThroughPortal(portal);
-                break;
+        if (!IsHoldingAPortal()) {
+            if (m_CurrentApp == null) {
+                foreach (var app in m_Apps) {
+                    if (DidCameraMoveThroughPortal(app._HomePortal)) {
+                        TeleportThroughPortal(app._HomePortal);
+                        m_CurrentApp = app;
+                        break;
+                    }
+                }
+            } else if (DidCameraMoveThroughPortal(m_CurrentApp.Value._AppPortal)) {
+                TeleportThroughPortal(m_CurrentApp.Value._AppPortal);
+                m_CurrentApp = null;
             }
         }
 
@@ -34,8 +68,8 @@ public class PortalManager : MonoBehaviour {
     }
 
     private bool IsHoldingAPortal() {
-        foreach (var portal in m_Portals) {
-            if (portal.IsHeld) {
+        foreach (var app in m_Apps) {
+            if (app._AppPortal.IsHeld || app._HomePortal.IsHeld) {
                 return true;
             }
         }

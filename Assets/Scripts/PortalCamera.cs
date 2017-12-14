@@ -25,7 +25,7 @@ public class PortalCamera : MonoBehaviour {
         m_PortalCamera = GetComponent<Camera>();
 
         // Enable this camera, because we disable it in the editor for convenience.
-        m_PortalCamera.enabled = true;
+        //m_PortalCamera.enabled = true;
 
         // Create quad mesh with dimensions consistent with the Quad builtin dimensions.
         m_ScreenQuad = new Mesh();
@@ -60,7 +60,12 @@ public class PortalCamera : MonoBehaviour {
         m_PortalCamera.farClipPlane = m_MainCamera.farClipPlane;
         m_PortalCamera.stereoTargetEye = m_MainCamera.stereoTargetEye;
         //m_PortalCamera.fieldOfView = m_MainCamera.fieldOfView;
-        m_PortalCamera.enabled = true;
+
+        // Only render this portal if we're either a home portal and currently in the home, or if we're the
+        // app portal and we're in the app.
+        m_PortalCamera.enabled =
+            (m_Portal.m_PortalType == Portal.PortalType.Home && PortalManager.Instance.PlayerIsHome) ||
+            (m_Portal.m_PortalType == Portal.PortalType.App && PortalManager.Instance.CurrentAppPortal == m_Portal);
     }
 
     public void OnPreCull() {

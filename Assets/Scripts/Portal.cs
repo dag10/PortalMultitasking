@@ -5,12 +5,16 @@ using Valve.VR.InteractionSystem;
 
 [RequireComponent(typeof(Interactable))]
 public class Portal : MonoBehaviour {
+    public enum PortalType { Home, App }
+
     [SerializeField] private Portal m_LinkedPortal;
     [SerializeField] private Color m_Color;
     [SerializeField] private MeshRenderer m_BackQuad;
     [SerializeField] private MeshFilter m_StencilMesh;
     [SerializeField] private GameObject m_StencilOverride;
     [SerializeField] private float m_RotationSpeed = 3.8f;
+
+     public PortalType m_PortalType;
 
     private const Hand.AttachmentFlags m_AttachmentFlags = Hand.defaultAttachmentFlags & (~Hand.AttachmentFlags.SnapOnAttach) & (~Hand.AttachmentFlags.ParentToHand);
     private Vector3 m_InitialPortalPosition;
