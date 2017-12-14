@@ -1189,6 +1189,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Name: The Room
+  m_EnableAllPortals: 0
 --- !u!1 &316509454
 GameObject:
   m_ObjectHideFlags: 0
@@ -3162,7 +3163,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4981603751903502, guid: 1ff703c5cdd284b4db9c93310c63f0bf, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0.45
+      value: -0.27
       objectReference: {fileID: 0}
     - target: {fileID: 4981603751903502, guid: 1ff703c5cdd284b4db9c93310c63f0bf, type: 2}
       propertyPath: m_LocalPosition.y
@@ -3170,7 +3171,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4981603751903502, guid: 1ff703c5cdd284b4db9c93310c63f0bf, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -1.792
+      value: -1.88
       objectReference: {fileID: 0}
     - target: {fileID: 4981603751903502, guid: 1ff703c5cdd284b4db9c93310c63f0bf, type: 2}
       propertyPath: m_LocalRotation.x
@@ -3954,6 +3955,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Name: Crossbow
+  m_EnableAllPortals: 0
 --- !u!1 &1182435311
 GameObject:
   m_ObjectHideFlags: 0
@@ -4614,7 +4616,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1296976021
 Transform:
   m_ObjectHideFlags: 0
@@ -6087,6 +6089,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Name: Tilt Brush
+  m_EnableAllPortals: 0
 --- !u!1 &1853703548
 GameObject:
   m_ObjectHideFlags: 0
@@ -7026,6 +7029,20 @@ Prefab:
     - target: {fileID: 4630660823894830, guid: bc634ab61c70cde4abd190f80c555d04, type: 2}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1292359210979852, guid: bc634ab61c70cde4abd190f80c555d04, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 137034396012341920, guid: bc634ab61c70cde4abd190f80c555d04,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114890760960210046, guid: bc634ab61c70cde4abd190f80c555d04,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bc634ab61c70cde4abd190f80c555d04, type: 2}
