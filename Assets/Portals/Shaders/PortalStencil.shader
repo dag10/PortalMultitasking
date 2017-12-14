@@ -12,7 +12,7 @@
 
 			ZWrite Off
 			ColorMask 0
-			//Cull Off
+			Cull Off
 			Offset -3, -1
 
 			CGPROGRAM
@@ -40,7 +40,6 @@
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-				//clip(-1);
 				return fixed4(1, 1, 1, 1);
 			}
 			ENDCG

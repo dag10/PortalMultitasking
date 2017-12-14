@@ -97,17 +97,7 @@ public class PortalCamera : MonoBehaviour {
 
         // Create a matrix for fragments to transform themselves to portal-space and determine
         // which side of the portal plane they lie on.
-        Shader.SetGlobalMatrix("_InvPortal", m_Portal.LinkedPortal.transform.worldToLocalMatrix);
-
-        Vector4 leftEye = MathUtils.Vec3to4(
-            m_MainCamera.transform.position - (m_MainCamera.transform.right * m_MainCamera.stereoSeparation), 1);
-        Vector4 rightEye = MathUtils.Vec3to4(
-            m_MainCamera.transform.position + (m_MainCamera.transform.right * m_MainCamera.stereoSeparation), 1);
-        Vector3 leftEye_PS = MathUtils.HomogenousToCartesian(m_Portal.transform.worldToLocalMatrix * leftEye);
-        Vector3 rightEye_PS = MathUtils.HomogenousToCartesian(m_Portal.transform.worldToLocalMatrix * rightEye);
-        Vector4 eyePortalSides = new Vector4(leftEye_PS.z, rightEye_PS.z);
-        Debug.Log("Eye Portal Sides: " + eyePortalSides);
-        Shader.SetGlobalVector("_EyePortalSide", eyePortalSides);
+        Shader.SetGlobalMatrix("_InvPortal", m_Portal.LinkedPortal.transform.localToWorldMatrix.inverse);
     }
 
     public void OnPostRender() {
@@ -286,14 +276,6 @@ public class PortalCamera : MonoBehaviour {
                 false);
         }
 
-        // Shift the intersection line by a small amount to ultimately
-        // partially overlap the true intersection line, preventing aliasing issues when
-        // stenciling in at the intersection line itself.
-        Vector3 shiftDirection = Vector3.Cross(lineTangent, portalForward);
-        //shiftDirection_CS.y *= m_MainCamera.aspect;
-        //shiftDirection_CS *= Mathf.Abs(Vector3.Dot(clipForward, portalForward));
-        linePoint += shiftDirection * 0.05f;
-
         // Transform intersection line to clip space.
         Vector3 linePoint_CS = MathUtils.HomogenousToCartesian(
             m_MainCamera.projectionMatrix * m_MainCamera.worldToCameraMatrix * MathUtils.Vec3to4(linePoint, 1));
@@ -301,13 +283,12 @@ public class PortalCamera : MonoBehaviour {
             m_MainCamera.projectionMatrix * m_MainCamera.worldToCameraMatrix * MathUtils.Vec3to4(linePoint + lineTangent, 1));
         Vector3 lineTangent_CS = (linePointB_CS - linePoint_CS).normalized;
 
-        //// Shift the intersection line by a small amount to ultimately
-        //// partially overlap the true intersection line, preventing aliasing issues when
-        //// stenciling in at the intersection line itself.
-        //Vector3 shiftDirection_CS = Vector3.Cross(lineTangent_CS, Vector3.forward);
-        //shiftDirection_CS.y *= m_MainCamera.aspect;
-        ////shiftDirection_CS *= Mathf.Abs(Vector3.Dot(clipForward, portalForward));
-        //linePoint_CS += shiftDirection_CS * 0.05f;
+        // Shift the intersection line by a small amount to ultimately
+        // partially overlap the true intersection line, preventing aliasing issues when
+        // stenciling in at the intersection line itself.
+        Vector3 shiftDirection_CS = Vector3.Cross(lineTangent_CS, Vector3.forward);
+        shiftDirection_CS.y *= m_MainCamera.aspect;
+        linePoint_CS += shiftDirection_CS * 0.05f;
 
         // Calculate stereoscopic horizontal offset for the clip line for each eye.
         float stereoOffset = 0;
